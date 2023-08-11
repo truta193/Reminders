@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Reminders.MainPage"             
+             xmlns:model="clr-namespace:Reminders.Model"
+             xmlns:viewmodel="clr-namespace:Reminders.ViewModel"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             ios:Page.UseSafeArea="True"
+             x:DataType="viewmodel:MainViewModel">
+
+    <Grid Padding="10">
+        <ScrollView>
+            <VerticalStackLayout>
+                <Label Text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"/>
+            </VerticalStackLayout>
+        </ScrollView>
+        <Button Text="+"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                CornerRadius="1000"
+                WidthRequest="80"
+                HeightRequest="80"
+                MaximumHeightRequest="150"
+                MaximumWidthRequest="150"
+                Command="{Binding SaveDataCommand}"/>
+        <Button Text="-"
+                HorizontalOptions="Start"
+                VerticalOptions="End"
+                CornerRadius="1000"
+                WidthRequest="80"
+                HeightRequest="80"
+                MaximumHeightRequest="150"
+                MaximumWidthRequest="150"
+                Command="{Binding LoadDataCommand}"/>
+    </Grid>
+
+</ContentPage>
