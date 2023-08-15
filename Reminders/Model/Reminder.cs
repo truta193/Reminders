@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Reminders.Model;
 public class Reminder
 {
     //TODO: Getters and setters for DateTime stuff
+    [XmlAttribute]
     public string Title { get; set; }
+    [XmlAttribute]
     public string Description { get; set; }
     //public DateTime CreatedAt { get; set; }
     //public DateTime StartingAt { get; set; }
