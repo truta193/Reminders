@@ -20,35 +20,34 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     async Task SaveDataAsync()
     {
-        Reminder rem = new Reminder("Hello", "World");
-        Reminder rem2 = new Reminder("Hello", "Ben");
-        Reminder rem3 = new Reminder("You shall be called", "World");
-        ReminderList remList = new ReminderList();
-        remList.Add(rem);
-        remList.Add(rem2);
-        remList.Add(rem3);
-        ReminderList remList2 = new ReminderList();
-        remList2.Add(rem3);
-        remList2.Add(rem2);
-        remList2.Add(rem3);
-        XmlStructure lists = new XmlStructure();
-        lists.Lists.Add(remList);
-        lists.Lists.Add(remList2);
+        Reminder rem1 = new Reminder("Hello", "World", false, false);
+        Reminder rem2 = new Reminder("Hello", "Kenobi", false, false);
+        Reminder rem3 = new Reminder("Hello", "Friends", false, false);
+        ReminderGroup remGroup1 = new ReminderGroup("Hellos");
+        remGroup1.Add(rem1);
+        remGroup1.Add(rem2);
+        remGroup1.Add(rem3);
+        Reminder rem4 = new Reminder("Bye", "World", false, false);
+        Reminder rem5 = new Reminder("Bye", "Kenobi", false, false);
+        Reminder rem6 = new Reminder("Bye", "Friends", false, false);
+        ReminderGroup remGroup2 = new ReminderGroup("Byes");
+        remGroup2.Add(rem4);
+        remGroup2.Add(rem5);
+        remGroup2.Add(rem6);
 
-        dataStorageService.DataXmlSerializeCollection(lists);
-        Debug.WriteLine(rem);
+        ReminderCollection remCol = new();
+        remCol.Add(remGroup1);
+        remCol.Add(remGroup2);
+
+        dataStorageService.DataStore(remCol);
+        Debug.WriteLine(remCol);
     }
 
     [RelayCommand]
     async Task LoadDataAsync()
     {
-        XmlStructure rem = dataStorageService.DataXmlDeserializeCollection();
-        Debug.WriteLine(rem.Lists[0][0].Title + " " + rem.Lists[0][0].Description);
-        Debug.WriteLine(rem.Lists[0][1].Title + " " + rem.Lists[0][1].Description);
-        Debug.WriteLine(rem.Lists[0][2].Title + " " + rem.Lists[0][2].Description);
-        Debug.WriteLine(rem.Lists[1][0].Title + " " + rem.Lists[1][0].Description);
-        Debug.WriteLine(rem.Lists[1][1].Title + " " + rem.Lists[1][1].Description);
-        Debug.WriteLine(rem.Lists[1][2].Title + " " + rem.Lists[1][2].Description);
+        ReminderCollection remCol = dataStorageService.DataRetrieve();
+        Debug.WriteLine(remCol?.Groups[0].Title + " " + remCol?.Groups[1].Title);
     }
 }
 

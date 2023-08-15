@@ -11,6 +11,11 @@ namespace Reminders.Model;
 public class ReminderCollection
 {
     [XmlArray]
-    public ObservableCollection<ReminderGroup> Lists { get; set; } = new();
+    public ObservableCollection<ReminderGroup> Groups {get; set; } = new();
+    public ReminderCollection() { }
 
+    public void Add(ReminderGroup group)
+    {
+        this.Groups.Add(group);
+    }
 }
