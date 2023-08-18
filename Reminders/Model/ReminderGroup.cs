@@ -17,7 +17,7 @@ public class ReminderGroup
     public ObservableCollection<Reminder> Reminders { get; set; } = new();
 
     [XmlAttribute]
-    public string Title { get; set; }
+    public string Title { get; set; } = "Placeholder";
 
     public ReminderGroup() { }
 

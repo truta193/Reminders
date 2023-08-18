@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using Reminders.Model;
 namespace Reminders.Services;
 
+//TODO: Storage access plist iOS?
 public class DataStorageService
 {
     private XmlSerializer serializer;
@@ -25,7 +26,7 @@ public class DataStorageService
     {
         if (!File.Exists(filePath))
         {
-            Shell.Current.DisplayAlert("I/O Error", "Necessary files not yet created!", "OK");
+            //Shell.Current.DisplayAlert("I/O Error", "Necessary files not yet created!", "OK");
             return null;
         }
 

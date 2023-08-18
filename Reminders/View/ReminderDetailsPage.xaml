@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Reminders.View.ReminderDetailsPage"
+             xmlns:model="clr-namespace:Reminders.Model"
+             xmlns:viewmodel="clr-namespace:Reminders.ViewModel"
+             x:DataType="viewmodel:ReminderDetailsViewModel"
+             Title="ReminderDetailsPage"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             ios:Page.UseSafeArea="True">
+    
+    <VerticalStackLayout>
+        <Label 
+            Text="{Binding Reminder.Title}"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+    </VerticalStackLayout>
+</ContentPage>

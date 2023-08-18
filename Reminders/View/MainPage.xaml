@@ -6,32 +6,30 @@
              xmlns:viewmodel="clr-namespace:Reminders.ViewModel"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              ios:Page.UseSafeArea="True"
-             x:DataType="viewmodel:MainViewModel">
+             x:DataType="viewmodel:MainViewModel"
+             Title="Main">
 
-    <Grid Padding="10">
-        <ScrollView>
-            <VerticalStackLayout>
-                <Label Text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"/>
-            </VerticalStackLayout>
-        </ScrollView>
-        <Button Text="+"
-                HorizontalOptions="End"
-                VerticalOptions="End"
-                CornerRadius="1000"
-                WidthRequest="80"
-                HeightRequest="80"
-                MaximumHeightRequest="150"
-                MaximumWidthRequest="150"
-                Command="{Binding SaveDataCommand}"/>
-        <Button Text="-"
-                HorizontalOptions="Start"
-                VerticalOptions="End"
-                CornerRadius="1000"
-                WidthRequest="80"
-                HeightRequest="80"
-                MaximumHeightRequest="150"
-                MaximumWidthRequest="150"
-                Command="{Binding LoadDataCommand}"/>
-    </Grid>
+
+    <VerticalStackLayout Margin="10"
+                         Padding="10"
+                         Spacing="10">
+        <CollectionView ItemsSource="{Binding Collection.Groups}"
+                        BackgroundColor="Transparent">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:ReminderGroup">
+                    <Frame HeightRequest="125"
+                               Padding="0">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=GoToGroupListCommand}"
+                                                  CommandParameter="{Binding .}"/>
+                        </Frame.GestureRecognizers>
+                        <Label Text="{Binding Title}" FontSize="20"/>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Button Text="Append dummy data"
+                Command="{Binding AppendDummyDataCommand}"/>
+    </VerticalStackLayout>
 
 </ContentPage>
