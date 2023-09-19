@@ -1,35 +1,343 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Reminders.MainPage"             
+             x:Class="Reminders.MainPage"
              xmlns:model="clr-namespace:Reminders.Model"
              xmlns:viewmodel="clr-namespace:Reminders.ViewModel"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             xmlns:service="clr-namespace:Reminders.Services"
              ios:Page.UseSafeArea="True"
              x:DataType="viewmodel:MainViewModel"
-             Title="Main">
+             Title="Main"
+             BackgroundColor="#F2F2F6">
 
+    <ContentPage.Resources>
+        <service:StringToColorConverter x:Key="StringToColor" />
+    </ContentPage.Resources>
+    <!--Main grid housing all main components-->
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto, *"
+          ColumnDefinitions="*,*"
+          Padding="0"
+          Margin="0"
+          RowSpacing="15">
+        
+        <!--Search bar-->
+        <Frame Grid.Row="0"
+               Grid.ColumnSpan="2"
+               VerticalOptions="Center"
+               HorizontalOptions="Fill"
+               HeightRequest="36"
+               Margin="16,0,16,0"
+               Padding="4,0,0,0"
+               CornerRadius="10"
+               BackgroundColor="#E3E3E8"
+               BorderColor="#E3E3E8">
+            <!--Built in searchbar sucks-->
+            <Grid ColumnDefinitions="20,*"
+                  Padding="0"
+                  Margin="0,0,10,0">
+                <Image VerticalOptions="Center"
+                       HorizontalOptions="Start"
+                       Source="icon_search.svg"
+                       WidthRequest="20"
+                       HeightRequest="20"/>
+                <!-- HeightRequest brings it down, otherwise it would be offcenter because of the underline that's not visible-->
+                <Entry Grid.Column="1"
+                       HorizontalOptions="Start"
+                       HeightRequest="40"
+                       BackgroundColor="Transparent"
+                       ClearButtonVisibility="Never"
+                       Placeholder="Search"
+                       PlaceholderColor="{StaticResource Gray70}"
+                       Keyboard="Text"/>
 
-    <VerticalStackLayout Margin="10"
-                         Padding="10"
-                         Spacing="10">
-        <CollectionView ItemsSource="{Binding Collection.Groups}"
+            </Grid>
+        </Frame>
+        <!--Grid for housing categories: today, scheduled, all-->
+        <Grid Grid.Row="1"
+              Grid.ColumnSpan="2" 
+              Margin="16,16,16,0"
+              ColumnSpacing="15"
+              RowSpacing="15"
+              ColumnDefinitions="*,*"
+              RowDefinitions="Auto,Auto"
+              BackgroundColor="Transparent">
+            <!--Today frame-->
+            <Frame Grid.Column="0"
+                   Grid.Row="0"
+                   Padding="10"
+                   HeightRequest="82"
+                   CornerRadius="12"
+                   BackgroundColor="White"
+                   BorderColor="White">
+                <Grid ColumnDefinitions="*,Auto,*"
+                      RowDefinitions="*,*"
+                      RowSpacing="6"
+                      VerticalOptions="Start"
+                      Padding="0"
+                      Margin="5,0,5,8">
+                    <Frame Grid.Column="0" 
+                           HorizontalOptions="Start"
+                           VerticalOptions="Center"
+                           CornerRadius="50"
+                           WidthRequest="32"
+                           HeightRequest="32"
+                           BackgroundColor="{StaticResource Blue90}"
+                           BorderColor="{StaticResource Blue90}">
+                        <Image Source="icon_calendar.svg"
+                               WidthRequest="18"
+                               HeightRequest="18"/>
+                    </Frame>
+                    <Label Margin="0"
+                           Padding="0"
+                           Grid.Column="2"
+                           HorizontalOptions="End"
+                           VerticalOptions="Center"
+                           Text="0"
+                           TextColor="Black"
+                           FontSize="28"
+                           FontAttributes="Bold"/>
+                    <Label HorizontalOptions="Start"
+                           VerticalOptions="End"
+                           Grid.ColumnSpan="3"
+                           Text="Today"
+                           TextColor="{StaticResource Gray70}"
+                           FontSize="17"
+                           FontAttributes="Bold"
+                           Grid.Row="1"/>
+                </Grid>
+            </Frame>
+            <!--Scheduled frame-->
+            <Frame Grid.Column="1"
+                   Grid.Row="0"
+                   Padding="10"
+                   HeightRequest="82"
+                   CornerRadius="12"
+                   BackgroundColor="White"
+                   BorderColor="White">
+                <Grid ColumnDefinitions="*,Auto,*"
+                      RowDefinitions="*,*"
+                      RowSpacing="6"
+                      VerticalOptions="Start"
+                      Padding="0"
+                      Margin="5,0,5,8">
+                    <Frame Grid.Column="0" 
+                           HorizontalOptions="Start"
+                           VerticalOptions="Center"
+                           CornerRadius="50"
+                           WidthRequest="32"
+                           HeightRequest="32"
+                           BackgroundColor="#F14C3C"
+                           BorderColor="#F14C3C">
+                        <Image Source="icon_calendar.svg"
+                               WidthRequest="18"
+                               HeightRequest="18"/>
+                    </Frame>
+                    <Label Margin="0"
+                           Padding="0"
+                           Grid.Column="2"
+                           HorizontalOptions="End"
+                           VerticalOptions="Center"
+                           Text="0"
+                           TextColor="Black"
+                           FontSize="28"
+                           FontAttributes="Bold"/>
+                    <Label HorizontalOptions="Start"
+                           VerticalOptions="End"
+                           Grid.ColumnSpan="3"
+                           Text="Scheduled"
+                           TextColor="{StaticResource Gray70}"
+                           FontSize="17"
+                           FontAttributes="Bold"
+                           Grid.Row="1"/>
+                </Grid>
+            </Frame>
+            <!--All frame-->
+            <Frame Grid.Column="0"
+                   Grid.Row="1"
+                   Grid.ColumnSpan="2"
+                   Padding="10"
+                   HeightRequest="82"
+                   CornerRadius="12"
+                   BackgroundColor="White"
+                   BorderColor="White">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=CreateDummyDataCommand}"
+                                                          CommandParameter="{Binding .}"/>
+                </Frame.GestureRecognizers>
+                <Grid ColumnDefinitions="*,Auto,*"
+                      RowDefinitions="*,*"
+                      RowSpacing="6"
+                      VerticalOptions="Start"
+                      Padding="0"
+                      Margin="5,0,5,8">
+                    <Frame Grid.Column="0" 
+                           HorizontalOptions="Start"
+                           VerticalOptions="Center"
+                           CornerRadius="50"
+                           WidthRequest="32"
+                           HeightRequest="32"
+                           BackgroundColor="{StaticResource Gray90}"
+                           BorderColor="{StaticResource Gray90}">
+                        <Image Source="icon_calendar.svg"
+                               WidthRequest="18"
+                               HeightRequest="18"/>
+                    </Frame>
+                    <Label Margin="0"
+                           Padding="0"
+                           Grid.Column="2"
+                           HorizontalOptions="End"
+                           VerticalOptions="Center"
+                           Text="0"
+                           TextColor="Black"
+                           FontSize="28"
+                           FontAttributes="Bold"/>
+                    <Label HorizontalOptions="Start"
+                           VerticalOptions="End"
+                           Grid.ColumnSpan="3"
+                           Text="All"
+                           TextColor="{StaticResource Gray70}"
+                           FontSize="17"
+                           FontAttributes="Bold"
+                           Grid.Row="1"/>
+                </Grid>
+            </Frame>
+        </Grid>
+        <!--Lists-->
+        <Label Grid.Row="2"
+               Grid.ColumnSpan="2"
+               Margin="16, 0, 16, 0"
+               Text="My Lists"
+               TextColor="Black"
+               FontSize="22"/>
+        <CollectionView Grid.Row="3"
+                        Grid.ColumnSpan="2"
+                        Margin="16,-6,16,0"
+                        ItemsSource="{Binding Collection.Groups}"
+                        ItemsLayout="VerticalList"
                         BackgroundColor="Transparent">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:ReminderGroup">
-                    <Frame HeightRequest="125"
-                               Padding="0">
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=GoToGroupListCommand}"
-                                                  CommandParameter="{Binding .}"/>
-                        </Frame.GestureRecognizers>
-                        <Label Text="{Binding Title}" FontSize="20"/>
-                    </Frame>
+                    <SwipeView >
+                        <SwipeView.RightItems>
+                            <SwipeItems SwipeBehaviorOnInvoked="Close">
+                                <SwipeItem Text="Delete"
+                                           BackgroundColor="#F14C3C"/>
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <Frame Padding="10"
+                               Margin="0,7,0,7"
+                               HeightRequest="54"
+                               CornerRadius="12"
+                               BackgroundColor="White"
+                               BorderColor="White">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=GoToGroupListCommand}"
+                                                          CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+                            <Grid ColumnDefinitions="44,*,Auto,*,Auto"
+                                  RowDefinitions="*"
+                                  VerticalOptions="Center"
+                                  Margin="5,0,5,0">
+                                <Frame Grid.Column="0"
+                                       WidthRequest="32"
+                                       HeightRequest="32"
+                                       CornerRadius="50"
+                                       Padding="0"
+                                       HorizontalOptions="Start"
+                                       VerticalOptions="Center"
+                                       BackgroundColor="{Binding MainColor, Converter={StaticResource StringToColor}}"
+                                       BorderColor="{Binding MainColor, Converter={StaticResource StringToColor}}">
+                                    <Image Source="icon_calendar.svg"
+                                           WidthRequest="18"
+                                           HeightRequest="18"/>
+                                </Frame>
+                                <Label Grid.Column="1"
+                                       Text="{Binding Title}" 
+                                       TextColor="Black"
+                                       FontSize="17"
+                                       HorizontalOptions="Start"
+                                       VerticalOptions="Center"/>
+                                <Label Grid.Column="3"
+                                       HorizontalOptions="End"
+                                       VerticalOptions="Center"
+                                       Text="{Binding Reminders.Count}"
+                                       TextColor="{StaticResource Gray70}"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       Margin="0,0,8,0"/>
+                                <Image Grid.Column="4"
+                                       Source="icon_arrow_right.svg"
+                                       WidthRequest="18"
+                                       HeightRequest="24"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="End"/>
+                            </Grid>
+                        </Frame>
+                    </SwipeView>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-        <Button Text="Append dummy data"
-                Command="{Binding AppendDummyDataCommand}"/>
-    </VerticalStackLayout>
+        
+        <!--New Reminder-->
+        <Frame Grid.Row="4"
+               HeightRequest="40"
+               VerticalOptions="End"
+               Padding="14"
+               Margin="0,0,0,10"
+               BackgroundColor="Transparent"
+               BorderColor="Transparent">
+            <Frame.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=AppendDummyDataCommand}"
+                                                  CommandParameter="{Binding .}"/>
 
+            </Frame.GestureRecognizers>
+            <HorizontalStackLayout VerticalOptions="Center"
+                                   HorizontalOptions="Start"
+                                   HeightRequest="40"
+                                   Spacing="10"
+                                   Padding="0">
+                <Frame VerticalOptions="Center"
+                       HorizontalOptions="Start"
+                       Padding="0"
+                       Margin="0"
+                       WidthRequest="22"
+                       HeightRequest="22"
+                       CornerRadius="12"
+                       BackgroundColor="{StaticResource Blue90}"
+                       BorderColor="{StaticResource Blue90}">
+                    <Image Source="icon_calendar.svg"
+                           WidthRequest="12"
+                           HeightRequest="12"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"/>
+                </Frame>
+                <Label VerticalOptions="Center" 
+                       FontSize="18"
+                       Text="New Reminder"
+                       TextColor="#007BFF"/>
+            </HorizontalStackLayout>
+        </Frame>
+        <!--Add List-->
+        <Frame Grid.Row="4"
+               Grid.Column="1"
+               HeightRequest="40"
+               WidthRequest="100"
+               VerticalOptions="End"
+               HorizontalOptions="End"
+               Padding="0,0,14,0"
+               Margin="0,0,0,10"
+               BackgroundColor="Transparent"
+               BorderColor="Transparent">
+            <Frame.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=GoToNewListCommand}"/>
+            </Frame.GestureRecognizers>
+            <Label HorizontalOptions="End"
+                   VerticalOptions="Center"
+                   FontSize="18"
+                   Text="Add List"
+                   TextColor="#007BFF"/>
+        </Frame>
+
+    </Grid>
 </ContentPage>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,15 +19,17 @@ public class DataStorageService
                                               
     public DataStorageService()
     {
-        serializer = new XmlSerializer(typeof(ReminderCollection));
+        
         filePath = Path.Combine(appDirectory, fileName);
+        serializer = new XmlSerializer(typeof(ReminderCollection));
+        
     }
 
     public ReminderCollection DataRetrieve()
     {
         if (!File.Exists(filePath))
         {
-            //Shell.Current.DisplayAlert("I/O Error", "Necessary files not yet created!", "OK");
+            Shell.Current.DisplayAlert("I/O Error", "Necessary files not yet created!", "OK");
             return null;
         }
 
@@ -37,12 +40,25 @@ public class DataStorageService
             return null;
         }
 
-        ReminderCollection reminder = (ReminderCollection)serializer.Deserialize(fs);
+        ReminderCollection reminder = new();
 
+        try
+        {
+            reminder = (ReminderCollection) serializer.Deserialize(fs);
+        }
+        catch (InvalidOperationException)
+        {
+            //XML broken, delete for now
+            File.Delete(filePath);
+            Shell.Current.DisplayAlert("I/O Error", "XML file is broken!", "OK");
+        }
+            
         fs.Close();
         return reminder;
     }
 
+    //TODO: If it overwrites a shorter list stuff will linger from the old xml and break it
+    //      Empty it's contents to a backup before emptying it and writing
     public void DataStore(ReminderCollection collection)
     {
         if (collection == null)

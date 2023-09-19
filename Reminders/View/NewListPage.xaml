@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Reminders.View.NewListPage"
+             xmlns:model="clr-namespace:Reminders.Model"
+             xmlns:viewmodel="clr-namespace:Reminders.ViewModel"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             ios:Page.UseSafeArea="True"
+             x:DataType="viewmodel:NewListViewModel"
+             Title="Add List"
+             BackgroundColor="#F2F2F6">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Color x:Key="LightRadioButtonColor">#F3F2F1</Color>
+            <Color x:Key="DarkRadioButtonColor">#9B9A99</Color>
+
+            <ControlTemplate x:Key="ColorRadio">
+                <Border Stroke="Transparent"
+                        WidthRequest="54"
+                        HeightRequest="54"
+                        StrokeThickness="2"
+                        StrokeShape="RoundRectangle 54,54,54,54">
+                    <Ellipse WidthRequest="40"
+                             HeightRequest="40"
+                             Fill="{Binding Source={RelativeSource TemplatedParent}, Path=BackgroundColor}"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center"/>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CheckedStates">
+                                <VisualState x:Name="Checked">
+                                    <VisualState.Setters>
+                                        <Setter Property="Stroke" Value="{StaticResource Gray50}" />
+
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked">
+                                    <VisualState.Setters>
+                                        <Setter Property="Stroke" Value="Transparent" />
+
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+                </Border>
+            </ControlTemplate>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <VerticalStackLayout Margin="16,16,16,16"
+                         Spacing="15">
+        <Frame Padding="16,16,16,0"
+               HeightRequest="200"
+               CornerRadius="12"
+               BackgroundColor="White"
+               BorderColor="White">
+            <VerticalStackLayout>
+                <Frame VerticalOptions="Start"
+                       HorizontalOptions="Center"
+                       HeightRequest="96"
+                       WidthRequest="96"
+                       BackgroundColor="{Binding MainColor}"
+                       BorderColor="{Binding MainColor}"
+                       CornerRadius="50">
+                    <Image Source="icon_calendar.svg"
+                           WidthRequest="56"
+                           HeightRequest="56"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"/>
+                </Frame>
+                <Frame VerticalOptions="End"
+                       CornerRadius="12"
+                       BackgroundColor="{StaticResource Gray30}"
+                       BorderColor="{StaticResource Gray30}"
+                       HeightRequest="56"
+                       Padding="0"
+                       Margin="0,16,0,0">
+                    
+                    <Entry HorizontalOptions="Center"
+                       HeightRequest="56"
+                       BackgroundColor="Transparent"
+                       ClearButtonVisibility="Never"
+                       Placeholder="List Name"
+                       FontSize="22"
+                       PlaceholderColor="{StaticResource Gray60}"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"
+                       Keyboard="Text"/>
+                </Frame>
+                
+            </VerticalStackLayout>
+        </Frame>
+        <Frame Padding="10,10,10,10"
+               CornerRadius="12"
+               BackgroundColor="White"
+               BorderColor="White">
+
+            <FlexLayout VerticalOptions="Start"
+                    HorizontalOptions="Center"
+                    Padding="0"
+                    Margin="0"
+                    AlignContent="Start"
+                    AlignItems="Start"
+                    JustifyContent="SpaceEvenly"
+                    Wrap="Wrap">
+                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
+                             GroupName="colorss"
+                             IsChecked="True"
+                             BackgroundColor="#F14C3C">
+                    <RadioButton.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding UpdateListColorCommand}"
+                                              CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type RadioButton}}}" />
+                    </RadioButton.GestureRecognizers>
+                </RadioButton>
+                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
+                             GroupName="colorss"
+                             BackgroundColor="#FFA033">
+                    <RadioButton.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding UpdateListColorCommand}"
+                                              CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type RadioButton}}}" />
+                    </RadioButton.GestureRecognizers>
+                </RadioButton>
+                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
+                             GroupName="colorss"
+                             BackgroundColor="#F7CE45">
+                    <RadioButton.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding UpdateListColorCommand}"
+                                              CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type RadioButton}}}" />
+                    </RadioButton.GestureRecognizers>
+                </RadioButton>
+                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
+                             GroupName="colorss"
+                             BackgroundColor="#5DC466">
+                    <RadioButton.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding UpdateListColorCommand}"
+                                              CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type RadioButton}}}" />
+                    </RadioButton.GestureRecognizers>
+                </RadioButton>
+                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
+                             GroupName="colorss"
+                             BackgroundColor="#0C79FE">
+                    <RadioButton.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding UpdateListColorCommand}"
+                                              CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type RadioButton}}}" />
+                    </RadioButton.GestureRecognizers>
+                </RadioButton>
+                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
+                             GroupName="colorss"
+                             BackgroundColor="#B67AD5">
+                    <RadioButton.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding UpdateListColorCommand}"
+                                              CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type RadioButton}}}" />
+                    </RadioButton.GestureRecognizers>
+                </RadioButton>
+
+
+                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
+                             GroupName="colorss"
+                             BackgroundColor="#998667">
+                    <RadioButton.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding UpdateListColorCommand}"
+                                              CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type RadioButton}}}" />
+                    </RadioButton.GestureRecognizers>
+                </RadioButton>
+                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
+                             GroupName="colorss"
+                             IsEnabled="False"
+                             BackgroundColor="Transparent"/>
+                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
+                             GroupName="colorss"
+                             IsEnabled="False"
+                             BackgroundColor="Transparent"/>
+                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
+                             GroupName="colorss"
+                             IsEnabled="False"
+                             BackgroundColor="Transparent"/>
+                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
+                             GroupName="colorss"
+                             IsEnabled="False"
+                             BackgroundColor="Transparent"/>
+                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
+                             GroupName="colorss"
+                             IsEnabled="False"
+                             BackgroundColor="Transparent"/>
+
+            </FlexLayout>
+
+
+
+        </Frame>
+    </VerticalStackLayout>
+</ContentPage>

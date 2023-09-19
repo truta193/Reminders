@@ -35,4 +35,10 @@ public partial class GroupListViewModel : ObservableObject
             });
     }
 
+    [RelayCommand]
+    public void ToggleRadioButton(RadioButton radioButton)
+    {
+        radioButton.IsChecked = !radioButton.IsChecked;
+    }
+
 }
