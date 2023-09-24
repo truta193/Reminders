@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Reminders.View.NewListPage"
              xmlns:model="clr-namespace:Reminders.Model"
              xmlns:viewmodel="clr-namespace:Reminders.ViewModel"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
-             ios:Page.UseSafeArea="True"
+             x:Class="Reminders.View.NewListPage"
              x:DataType="viewmodel:NewListViewModel"
+             ios:Page.UseSafeArea="True"
              Title="Add List"
              BackgroundColor="#F2F2F6">
 
     <ContentPage.Resources>
         <ResourceDictionary>
 
-            <Color x:Key="LightRadioButtonColor">#F3F2F1</Color>
-            <Color x:Key="DarkRadioButtonColor">#9B9A99</Color>
-
             <ControlTemplate x:Key="ColorRadio">
                 <Border Stroke="Transparent"
                         WidthRequest="54"
                         HeightRequest="54"
                         StrokeThickness="2"
-                        StrokeShape="RoundRectangle 54,54,54,54">
+                        StrokeShape="RoundRectangle 54,54,54,54"
+                        BackgroundColor="White">
+                        
                     <Ellipse WidthRequest="40"
                              HeightRequest="40"
                              Fill="{Binding Source={RelativeSource TemplatedParent}, Path=BackgroundColor}"
@@ -58,19 +58,33 @@
                BackgroundColor="White"
                BorderColor="White">
             <VerticalStackLayout>
-                <Frame VerticalOptions="Start"
-                       HorizontalOptions="Center"
-                       HeightRequest="96"
-                       WidthRequest="96"
-                       BackgroundColor="{Binding MainColor}"
-                       BorderColor="{Binding MainColor}"
-                       CornerRadius="50">
-                    <Image Source="icon_calendar.svg"
-                           WidthRequest="56"
-                           HeightRequest="56"
-                           VerticalOptions="Center"
-                           HorizontalOptions="Center"/>
-                </Frame>
+                <Border VerticalOptions="Start"
+                        HorizontalOptions="Center"
+                        HeightRequest="96"
+                        WidthRequest="96"
+                        StrokeShape="Ellipse 50"
+                        Stroke="Transparent">
+                    <Border.Shadow>
+                        <Shadow Radius="20"
+                                Brush="{Binding MainColor}"
+                                Opacity="0.4"
+                                Offset="0,0"/>
+                    </Border.Shadow>
+                    <Frame VerticalOptions="Start"
+                           HorizontalOptions="Center"
+                           HeightRequest="96"
+                           WidthRequest="96"
+                           BackgroundColor="{Binding MainColor}"
+                           BorderColor="{Binding MainColor}"
+                           CornerRadius="50"
+                           HasShadow="True">
+                        <Image Source="icon_list.svg"
+                               WidthRequest="56"
+                               HeightRequest="56"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"/>
+                    </Frame>
+                </Border>
                 <Frame VerticalOptions="End"
                        CornerRadius="12"
                        BackgroundColor="{StaticResource Gray30}"
@@ -78,17 +92,21 @@
                        HeightRequest="56"
                        Padding="0"
                        Margin="0,16,0,0">
-                    
+
+                    <!--TODO Change text color-->
                     <Entry HorizontalOptions="Center"
-                       HeightRequest="56"
-                       BackgroundColor="Transparent"
-                       ClearButtonVisibility="Never"
-                       Placeholder="List Name"
-                       FontSize="22"
-                       PlaceholderColor="{StaticResource Gray60}"
-                       HorizontalTextAlignment="Center"
-                       VerticalTextAlignment="Center"
-                       Keyboard="Text"/>
+                           HeightRequest="56"
+                           BackgroundColor="Transparent"
+                           ClearButtonVisibility="Never"
+                           Placeholder="List Name"
+                           FontSize="22"
+                           PlaceholderColor="{StaticResource Gray60}"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center"
+                           Keyboard="Text"
+                           Text="{Binding Name, Mode=TwoWay}">
+                        
+                    </Entry>
                 </Frame>
                 
             </VerticalStackLayout>
@@ -98,6 +116,7 @@
                BackgroundColor="White"
                BorderColor="White">
 
+            <!--TODO Flex layout doesn't behave the way I want to, but dummy objects are messy as well, find a better solution-->
             <FlexLayout VerticalOptions="Start"
                     HorizontalOptions="Center"
                     Padding="0"
@@ -191,5 +210,7 @@
 
 
         </Frame>
+        <Button Text="Add list TEMP BUTTON"
+                Command="{Binding AddNewListCommand}"/>
     </VerticalStackLayout>
 </ContentPage>

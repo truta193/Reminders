@@ -26,9 +26,9 @@ public partial class NewListViewModel : ObservableObject
     public void UpdateListColor(RadioButton radioButton)
     {
         MainColor = radioButton.BackgroundColor;
-        AddNewList();
     }
 
+    [RelayCommand]
     public void AddNewList()
     {
         if (Name == String.Empty)
@@ -40,9 +40,11 @@ public partial class NewListViewModel : ObservableObject
             }
             Name = $"New List {count}";
         }
-        //TODO Add color
+        
         ReminderGroup list = new(Name, MainColor);
         Collection.Add(list);
+        Shell.Current.GoToAsync("../", true);
+
     }
 
 }

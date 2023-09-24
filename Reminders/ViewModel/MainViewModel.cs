@@ -129,6 +129,16 @@ public partial class MainViewModel : ObservableObject
             });
     }
 
+    [RelayCommand]
+    async Task GoToNewReminderAsync()
+    {
+        await Shell.Current.GoToAsync($"{nameof(NewReminderPage)}", true,
+            new Dictionary<string,object>
+            {
+                {"Collection", Collection}
+            });
+    }
+
     /*    [RelayCommand]
         public void GetTodayReminders()
         {

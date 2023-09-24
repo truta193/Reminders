@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using CommunityToolkit.Maui;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 #if ANDROID
 using Microsoft.Maui.Controls.Compatibility.Platform.Android;
@@ -31,7 +32,7 @@ public static class MauiProgram
 
         var builder = MauiApp.CreateBuilder();
 		builder
-			.UseMauiApp<App>()
+			.UseMauiApp<App>().UseMauiCommunityToolkit()
 			.ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -49,12 +50,14 @@ public static class MauiProgram
 		builder.Services.AddTransient<GroupListViewModel>();
 		builder.Services.AddTransient<ReminderDetailsViewModel>();
         builder.Services.AddTransient<NewListViewModel>();
+		builder.Services.AddTransient<NewReminderViewModel>();
 
 
         builder.Services.AddSingleton<MainPage>();
 		builder.Services.AddTransient<GroupListPage>();
 		builder.Services.AddTransient<ReminderDetailsPage>();
         builder.Services.AddTransient<NewListPage>();
+		builder.Services.AddTransient<NewReminderPage>();
 
 
         return builder.Build();
