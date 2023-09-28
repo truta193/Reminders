@@ -117,95 +117,39 @@
                BorderColor="White">
 
             <!--TODO Flex layout doesn't behave the way I want to, but dummy objects are messy as well, find a better solution-->
-            <FlexLayout VerticalOptions="Start"
-                    HorizontalOptions="Center"
-                    Padding="0"
-                    Margin="0"
-                    AlignContent="Start"
-                    AlignItems="Start"
-                    JustifyContent="SpaceEvenly"
-                    Wrap="Wrap">
-                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
+            <CollectionView VerticalOptions="Start"
+                            HorizontalOptions="Fill"
+                            Margin="0"
+                            RadioButtonGroup.GroupName="colorss">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="6"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemsSource>
+                    <x:Array Type="{x:Type model:RadioColorButton}">
+                        <model:RadioColorButton Color="#F14C3C" IsChecked="True"/>
+                        <model:RadioColorButton Color="#FFA033" IsChecked="False"/>
+                        <model:RadioColorButton Color="#F7CE45" IsChecked="False"/>
+                        <model:RadioColorButton Color="#5DC466" IsChecked="False"/>
+                        <model:RadioColorButton Color="#0C79FE" IsChecked="False"/>
+                        <model:RadioColorButton Color="#B67AD5" IsChecked="False"/>
+                        <model:RadioColorButton Color="#998667" IsChecked="False"/>
+                    </x:Array>
+                </CollectionView.ItemsSource>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:RadioColorButton">
+                        <RadioButton ControlTemplate="{StaticResource ColorRadio}"
                              GroupName="colorss"
-                             IsChecked="True"
-                             BackgroundColor="#F14C3C">
-                    <RadioButton.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding UpdateListColorCommand}"
+                             IsChecked="{Binding IsChecked}"
+                             BackgroundColor="{Binding Color}">
+                            <RadioButton.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:NewListViewModel}}, Path=UpdateListColorCommand}"
                                               CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type RadioButton}}}" />
-                    </RadioButton.GestureRecognizers>
-                </RadioButton>
-                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
-                             GroupName="colorss"
-                             BackgroundColor="#FFA033">
-                    <RadioButton.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding UpdateListColorCommand}"
-                                              CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type RadioButton}}}" />
-                    </RadioButton.GestureRecognizers>
-                </RadioButton>
-                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
-                             GroupName="colorss"
-                             BackgroundColor="#F7CE45">
-                    <RadioButton.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding UpdateListColorCommand}"
-                                              CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type RadioButton}}}" />
-                    </RadioButton.GestureRecognizers>
-                </RadioButton>
-                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
-                             GroupName="colorss"
-                             BackgroundColor="#5DC466">
-                    <RadioButton.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding UpdateListColorCommand}"
-                                              CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type RadioButton}}}" />
-                    </RadioButton.GestureRecognizers>
-                </RadioButton>
-                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
-                             GroupName="colorss"
-                             BackgroundColor="#0C79FE">
-                    <RadioButton.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding UpdateListColorCommand}"
-                                              CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type RadioButton}}}" />
-                    </RadioButton.GestureRecognizers>
-                </RadioButton>
-                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
-                             GroupName="colorss"
-                             BackgroundColor="#B67AD5">
-                    <RadioButton.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding UpdateListColorCommand}"
-                                              CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type RadioButton}}}" />
-                    </RadioButton.GestureRecognizers>
-                </RadioButton>
-
-
-                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
-                             GroupName="colorss"
-                             BackgroundColor="#998667">
-                    <RadioButton.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding UpdateListColorCommand}"
-                                              CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type RadioButton}}}" />
-                    </RadioButton.GestureRecognizers>
-                </RadioButton>
-                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
-                             GroupName="colorss"
-                             IsEnabled="False"
-                             BackgroundColor="Transparent"/>
-                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
-                             GroupName="colorss"
-                             IsEnabled="False"
-                             BackgroundColor="Transparent"/>
-                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
-                             GroupName="colorss"
-                             IsEnabled="False"
-                             BackgroundColor="Transparent"/>
-                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
-                             GroupName="colorss"
-                             IsEnabled="False"
-                             BackgroundColor="Transparent"/>
-                <RadioButton ControlTemplate="{StaticResource ColorRadio}"
-                             GroupName="colorss"
-                             IsEnabled="False"
-                             BackgroundColor="Transparent"/>
-
-            </FlexLayout>
+                            </RadioButton.GestureRecognizers>
+                        </RadioButton>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            
 
 
 
