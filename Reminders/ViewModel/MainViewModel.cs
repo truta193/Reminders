@@ -84,8 +84,10 @@ public partial class MainViewModel : ObservableObject
                 s.IsRepeating = false;
                 s.IsAllDay = false;
                 collection.Groups[1].Add(s);*/
-        collection.Groups[1].MainColor = "#F14C3C";
-        collection.Groups[0].MainColor = "#5DC466";
+        //collection.Groups[1].MainColor = "#F14C3C";
+        //collection.Groups[0].MainColor = "#5DC466";
+        collection.Groups[0].IconID = 0;
+        collection.Groups[1].IconID = 1;
 
         this.dataStorageService.DataStore(collection);
         this.Collection = collection;
@@ -122,21 +124,13 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     async Task GoToNewListAsync()
     {
-        await Shell.Current.GoToAsync($"{nameof(NewListPage)}", true,
-            new Dictionary<string, object>
-            {
-                {"Collection", Collection}
-            });
+        await Shell.Current.GoToAsync($"{nameof(NewListPage)}", true);
     }
 
     [RelayCommand]
     async Task GoToNewReminderAsync()
     {
-        await Shell.Current.GoToAsync($"{nameof(NewReminderPage)}", true,
-            new Dictionary<string,object>
-            {
-                {"Collection", Collection}
-            });
+        await Shell.Current.GoToAsync($"{nameof(NewReminderPage)}", true);
     }
 
     /*    [RelayCommand]

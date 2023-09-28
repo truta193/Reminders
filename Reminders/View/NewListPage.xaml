@@ -93,7 +93,6 @@
                        Padding="0"
                        Margin="0,16,0,0">
 
-                    <!--TODO Change text color-->
                     <Entry HorizontalOptions="Center"
                            HeightRequest="56"
                            BackgroundColor="Transparent"
@@ -104,7 +103,8 @@
                            HorizontalTextAlignment="Center"
                            VerticalTextAlignment="Center"
                            Keyboard="Text"
-                           Text="{Binding Name, Mode=TwoWay}">
+                           Text="{Binding Name, Mode=TwoWay}"
+                           TextColor="Black">
                         
                     </Entry>
                 </Frame>

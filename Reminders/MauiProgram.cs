@@ -27,10 +27,16 @@ public static class MauiProgram
 			h.PlatformView.BackgroundTintList = Android.Content.Res.ColorStateList.ValueOf(Colors.Transparent.ToAndroid());
 #endif
         });
+		Microsoft.Maui.Handlers.EditorHandler.Mapper.AppendToMapping("EditorCustomization", (handler, view) =>
+		{
+#if ANDROID
+        handler.PlatformView.SetBackgroundColor(Android.Graphics.Color.Transparent);
+#endif
+		});
 
 
 
-        var builder = MauiApp.CreateBuilder();
+            var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>().UseMauiCommunityToolkit()
 			.ConfigureFonts(fonts =>
@@ -48,16 +54,16 @@ public static class MauiProgram
 
 		builder.Services.AddSingleton<MainViewModel>();
 		builder.Services.AddTransient<GroupListViewModel>();
-		builder.Services.AddTransient<ReminderDetailsViewModel>();
         builder.Services.AddTransient<NewListViewModel>();
-		builder.Services.AddTransient<NewReminderViewModel>();
+		builder.Services.AddSingleton<NewReminderViewModel>();
+		builder.Services.AddTransient<NewReminderListSelectViewModel>();
 
 
         builder.Services.AddSingleton<MainPage>();
 		builder.Services.AddTransient<GroupListPage>();
-		builder.Services.AddTransient<ReminderDetailsPage>();
         builder.Services.AddTransient<NewListPage>();
 		builder.Services.AddTransient<NewReminderPage>();
+		builder.Services.AddTransient<NewReminderListSelectPage>();
 
 
         return builder.Build();

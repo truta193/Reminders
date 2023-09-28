@@ -52,6 +52,7 @@
 	  <None Remove="Resources\Images\icon_all.svg" />
 	  <None Remove="Resources\Images\icon_arrow_right.svg" />
 	  <None Remove="Resources\Images\icon_calendar.svg" />
+	  <None Remove="Resources\Images\icon_circle.svg" />
 	  <None Remove="Resources\Images\icon_list.svg" />
 	  <None Remove="Resources\Images\icon_plus.svg" />
 	  <None Remove="Resources\Images\icon_scheduled.svg" />
@@ -71,10 +72,10 @@
 	  <MauiXaml Update="View\NewListPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="View\NewReminderPage.xaml">
+	  <MauiXaml Update="View\NewReminderListSelectPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="View\ReminderDetailsPage.xaml">
+	  <MauiXaml Update="View\NewReminderPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

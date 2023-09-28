@@ -6,8 +6,8 @@ using CommunityToolkit.Mvvm.Input;
 using Reminders.Model;
 
 namespace Reminders.ViewModel;
-
-[QueryProperty("Collection", "Collection")]
+//TODO There's a delay when opening the page
+//TODO Save to XML when adding!!!!!!
 public partial class NewListViewModel : ObservableObject
 {
     [ObservableProperty]
@@ -15,11 +15,16 @@ public partial class NewListViewModel : ObservableObject
     [ObservableProperty]
     Color mainColor;
     [ObservableProperty]
+    int iconID;
+    [ObservableProperty]
     String name;
-    public NewListViewModel()
+    MainViewModel mainViewModel;
+
+    public NewListViewModel(MainViewModel mvm)
 	{
         MainColor = Color.FromArgb("#F14C3C");
         Name = String.Empty;
+        this.mainViewModel = mvm;
     }
 
     [RelayCommand]
@@ -34,15 +39,16 @@ public partial class NewListViewModel : ObservableObject
         if (Name == String.Empty)
         {
             int count = 1;
-            foreach (ReminderGroup rg in Collection.Groups)
+            foreach (ReminderGroup rg in this.mainViewModel.Collection.Groups)
             {
                 if (Regex.IsMatch(rg.Title, @"New List*")) count++;
             }
             Name = $"New List {count}";
         }
         
-        ReminderGroup list = new(Name, MainColor);
-        Collection.Add(list);
+        ReminderGroup list = new(Name, MainColor, IconID);
+        this.mainViewModel.Collection.Add(list);
+        
         Shell.Current.GoToAsync("../", true);
 
     }

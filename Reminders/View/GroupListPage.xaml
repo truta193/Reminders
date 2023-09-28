@@ -20,8 +20,7 @@
                            BackgroundColor="Transparent"
                            BorderColor="Transparent">
                         <Frame.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:GroupListViewModel}}, Path=GoToReminderDetailsPageCommand}"
-                                                  CommandParameter="{Binding .}"/>
+                            
                             
                         </Frame.GestureRecognizers>
 

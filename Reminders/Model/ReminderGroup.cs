@@ -19,14 +19,17 @@ public class ReminderGroup
     [XmlAttribute]
     public string Title { get; set; } = "Placeholder";
     [XmlAttribute]
-    public String MainColor { get; set; } = "#000000";
+    public string MainColor { get; set; } = "#000000";
+    [XmlAttribute]
+    public int IconID { get; set; } = 0;
 
     public ReminderGroup() { }
 
-    public ReminderGroup(string title,  Color mainColor)
+    public ReminderGroup(string title,  Color mainColor, int iconID)
     {
         this.Title= title;
         this.MainColor = mainColor.ToHex();
+        this.IconID = iconID;
     }
 
     public void Add(Reminder reminder)

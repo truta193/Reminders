@@ -22,20 +22,6 @@ public partial class GroupListViewModel : ObservableObject
     }
 
     [RelayCommand]
-    async Task GoToReminderDetailsPageAsync(Reminder reminder)
-    {
-        if (reminder == null) {
-            return;
-        }
-
-        await Shell.Current.GoToAsync($"{nameof(ReminderDetailsPage)}", true,
-            new Dictionary<string, object>
-            {
-                {"Reminder", reminder }
-            });
-    }
-
-    [RelayCommand]
     public void ToggleRadioButton(RadioButton radioButton)
     {
         radioButton.IsChecked = !radioButton.IsChecked;
