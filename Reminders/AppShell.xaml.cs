@@ -12,5 +12,6 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(NewListPage), typeof(NewListPage));
 		Routing.RegisterRoute(nameof(NewReminderPage), typeof(NewReminderPage));
 		Routing.RegisterRoute(nameof(NewReminderListSelectPage), typeof(NewReminderListSelectPage));
+		Routing.RegisterRoute(nameof(NewReminderDetailsPage), typeof(NewReminderDetailsPage));
     }
 }

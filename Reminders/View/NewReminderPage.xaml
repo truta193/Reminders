@@ -28,15 +28,21 @@
                                  Padding="12,0,12,0"
                                  VerticalOptions="Start"
                                  HorizontalOptions="Center">
-                <Entry Placeholder="Title"
+                <Grid HorizontalOptions="Fill"
+                      ColumnDefinitions="*"
+                      RowDefinitions="Auto">
+                    <Entry Placeholder="Title"
+                       Text="{Binding Title, Mode=TwoWay}"
                        PlaceholderColor="{StaticResource Gray50}"
                        BackgroundColor="Transparent"
-                       ClearButtonVisibility="Never"
+                       ClearButtonVisibility="WhileEditing"
                        Keyboard="Text"
-                       HorizontalOptions="Start"
+                       HorizontalOptions="Fill"
                        FontSize="17"
                        Margin="0,12,0,12"
                        TextColor="Black"/>
+                </Grid>
+                
                 <Rectangle BackgroundColor="{StaticResource Gray50}"
                            HeightRequest="1"
                            Margin="0"/>
@@ -48,15 +54,16 @@
                        MaximumHeightRequest="300">
                     
                     <Editor Placeholder="Notes"
-                        HorizontalOptions="Fill"
-                        VerticalTextAlignment="Start"
-                        PlaceholderColor="{StaticResource Gray50}"
-                        BackgroundColor="Transparent"
-                        Keyboard="Text"
-                        FontSize="17"
-                        Margin="0,12,0,12"
-                        TextColor="Black"
-                        AutoSize="TextChanges"/>
+                            Text="{Binding Description, Mode=TwoWay}"
+                            HorizontalOptions="Fill"
+                            VerticalTextAlignment="Start"
+                            PlaceholderColor="{StaticResource Gray50}"
+                            BackgroundColor="Transparent"
+                            Keyboard="Text"
+                            FontSize="17"
+                            Margin="0,12,0,12"
+                            TextColor="Black"
+                            AutoSize="TextChanges"/>
                 </Frame>
                 
             </VerticalStackLayout>
@@ -69,6 +76,9 @@
                Padding="0"
                Margin="0"
                HeightRequest="54">
+            <Frame.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding GoToDetailsCommand}"/>
+            </Frame.GestureRecognizers>
             <Grid ColumnDefinitions="Auto, *, Auto"
                   RowDefinitions="*"
                   VerticalOptions="Center"
@@ -146,6 +156,8 @@
             </Grid>
 
         </Frame>
+        <Button Text="Add reminder TEMP BUTTON"
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:NewReminderViewModel}}, Path=AddNewReminderCommand}"/>
 
     </VerticalStackLayout>
 </ContentPage>

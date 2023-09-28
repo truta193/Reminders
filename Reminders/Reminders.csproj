@@ -53,6 +53,7 @@
 	  <None Remove="Resources\Images\icon_arrow_right.svg" />
 	  <None Remove="Resources\Images\icon_calendar.svg" />
 	  <None Remove="Resources\Images\icon_circle.svg" />
+	  <None Remove="Resources\Images\icon_clock.svg" />
 	  <None Remove="Resources\Images\icon_list.svg" />
 	  <None Remove="Resources\Images\icon_plus.svg" />
 	  <None Remove="Resources\Images\icon_scheduled.svg" />
@@ -62,7 +63,9 @@
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="5.3.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+		<PackageReference Include="IeuanWalker.Maui.Switch" Version="1.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="XCalendar.Maui" Version="4.5.2" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -70,6 +73,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="View\NewListPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\NewReminderDetailsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="View\NewReminderListSelectPage.xaml">

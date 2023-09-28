@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui;
+using IeuanWalker.Maui.Switch;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 #if ANDROID
@@ -21,25 +22,28 @@ public static class MauiProgram
         //DataStorage ds = new DataStorage();
         //ds.DataXmlSerialize(rem);
 
-		//Remove Entry underline
-        Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoUnderline", (h, v) => {
+        //Remove Entry underline
 #if ANDROID
+		Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoUnderline", (h, v) => {
+
 			h.PlatformView.BackgroundTintList = Android.Content.Res.ColorStateList.ValueOf(Colors.Transparent.ToAndroid());
-#endif
+
         });
+
 		Microsoft.Maui.Handlers.EditorHandler.Mapper.AppendToMapping("EditorCustomization", (handler, view) =>
 		{
-#if ANDROID
-        handler.PlatformView.SetBackgroundColor(Android.Graphics.Color.Transparent);
-#endif
+
+			handler.PlatformView.SetBackgroundColor(Android.Graphics.Color.Transparent);
+
 		});
 
+#endif
 
 
-            var builder = MauiApp.CreateBuilder();
+        var builder = MauiApp.CreateBuilder();
 		builder
-			.UseMauiApp<App>().UseMauiCommunityToolkit()
-			.ConfigureFonts(fonts =>
+			.UseMauiApp<App>().UseMauiCommunityToolkit().UseSwitch()
+            .ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
@@ -51,12 +55,15 @@ public static class MauiProgram
 
 		builder.Services.AddSingleton<DataStorageService>();
 		builder.Services.AddSingleton<StringToColorConverter>();
+        builder.Services.AddSingleton<DateTimeService>();
 
-		builder.Services.AddSingleton<MainViewModel>();
+
+        builder.Services.AddSingleton<MainViewModel>();
 		builder.Services.AddTransient<GroupListViewModel>();
         builder.Services.AddTransient<NewListViewModel>();
 		builder.Services.AddSingleton<NewReminderViewModel>();
 		builder.Services.AddTransient<NewReminderListSelectViewModel>();
+		builder.Services.AddTransient<NewReminderDetalisViewModel>();
 
 
         builder.Services.AddSingleton<MainPage>();
@@ -64,6 +71,8 @@ public static class MauiProgram
         builder.Services.AddTransient<NewListPage>();
 		builder.Services.AddTransient<NewReminderPage>();
 		builder.Services.AddTransient<NewReminderListSelectPage>();
+        builder.Services.AddTransient<NewReminderDetailsPage>();
+
 
 
         return builder.Build();

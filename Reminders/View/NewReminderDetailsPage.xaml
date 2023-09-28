@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Reminders.View.NewReminderDetailsPage"
+             Title="NewReminderDetailsPage"
+             BackgroundColor="#F2F2F6"
+             xmlns:switch="clr-namespace:IeuanWalker.Maui.Switch;assembly=IeuanWalker.Maui.Switch"
+             xmlns:model="clr-namespace:Reminders.Model"
+             xmlns:viewmodel="clr-namespace:Reminders.ViewModel"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             xmlns:service="clr-namespace:Reminders.Services"
+             ios:Page.UseSafeArea="True"
+             x:DataType="viewmodel:NewReminderDetalisViewModel">
+
+    <ContentPage.Resources>
+        <service:StringToColorConverter x:Key="StringToColor" />
+    </ContentPage.Resources>
+
+
+    <VerticalStackLayout Padding="0"
+                         Margin="16">
+        <Frame Margin="0"
+               Padding="0"
+               BorderColor="White"
+               BackgroundColor="White"
+               CornerRadius="12" 
+               HorizontalOptions="Center">
+            <VerticalStackLayout Margin="0"
+                                 Padding="0"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center">
+                <!--Grid for date option-->
+                <Grid RowDefinitions="*,Auto"
+                  ColumnDefinitions="56,*, *"
+                  HorizontalOptions="Fill"
+                  VerticalOptions="Start"
+                  HeightRequest="54"
+                  Padding="0"
+                  Margin="0">
+                    <Frame BackgroundColor="#FF382D"
+                       BorderColor="#FF382D"
+                       WidthRequest="32"
+                       HeightRequest="32"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start"
+                       Margin="12,0,12,0"
+                       Padding="0">
+                        <Image Source="icon_scheduled.svg"
+                           WidthRequest="21"
+                           HeightRequest="20"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"/>
+                    </Frame>
+                    <Label Grid.Column="1"
+                       Text="Date"
+                       HorizontalOptions="Start"
+                       VerticalOptions="Center"
+                       FontSize="17"
+                       TextColor="Black"/>
+                    <switch:CustomSwitch Grid.Column="2"
+                                     HorizontalOptions="End"
+                                     VerticalOptions="Center"
+                                     Margin="0,0,12,0"
+                                     HeightRequest="31"
+                                     HorizontalKnobMargin="2"
+                                     IsToggled="{Binding IsToggled, Source={RelativeSource AncestorType={x:Type ContentView}}}"
+                                     KnobBackgroundColor="White"
+                                     KnobHeight="27"
+                                     KnobLimit="Boundary"
+                                     KnobWidth="27"
+                                     SemanticProperties.Hint="{Binding AccessibilityHint, Source={RelativeSource AncestorType={x:Type ContentView}}}"
+                                     SwitchPanUpdate="CustomSwitch_SwitchPanUpdate"
+                                     Toggled="CustomSwitch_Toggled"
+                                     ToggledCommand="{Binding ToggledCommand, Source={RelativeSource AncestorType={x:Type ContentView}}}"
+                                     WidthRequest="51">
+                        <switch:CustomSwitch.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </switch:CustomSwitch.StrokeShape>
+                        <switch:CustomSwitch.KnobStrokeShape>
+                            <RoundRectangle CornerRadius="18" />
+                        </switch:CustomSwitch.KnobStrokeShape>
+                    </switch:CustomSwitch>
+
+                    <Rectangle BackgroundColor="{StaticResource Gray50}"
+                           HeightRequest="1"
+                           HorizontalOptions="Fill"
+                           Grid.Row="1"
+                           Grid.Column="1"
+                           Grid.ColumnSpan="3"
+                           Margin="0,0,12,0"/>
+                </Grid>
+                <!--Calendar-->
+                <Frame Margin="12,0,12,0"
+                       Padding="0"
+                       VerticalOptions="Start"
+                       HorizontalOptions="Fill"
+                       BackgroundColor="Transparent"
+                       BorderColor="Transparent">
+                    <VerticalStackLayout Margin="0"
+                                         Padding="0"
+                                         VerticalOptions="Start"
+                                         HorizontalOptions="Fill">
+                        <!--Day names-->
+                        <CollectionView Margin="0,12,0,12"
+                                        VerticalOptions="Start"
+                                        HorizontalOptions="Fill">
+                            <CollectionView.ItemsLayout>
+                                <GridItemsLayout Orientation="Vertical" Span="7"/>
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>SUN</x:String>
+                                    <x:String>MON</x:String>
+                                    <x:String>TUE</x:String>
+                                    <x:String>WED</x:String>
+                                    <x:String>THU</x:String>
+                                    <x:String>FRI</x:String>
+                                    <x:String>SAT</x:String>
+                                </x:Array>
+                            </CollectionView.ItemsSource>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Label Text="{Binding}" HorizontalOptions="Center" VerticalOptions="Center" FontSize="13" TextColor="{StaticResource Gray50}"/>
+
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                        <!--Day numbers-->
+                        <CollectionView Margin="0"
+                                        VerticalOptions="Start"
+                                        HorizontalOptions="Center"
+                                        ItemsSource="{Binding Days}">
+                            <CollectionView.ItemsLayout>
+                                <GridItemsLayout Orientation="Vertical" Span="7"/>
+                            </CollectionView.ItemsLayout>
+
+                            <CollectionView.ItemTemplate >
+                                <DataTemplate x:DataType="model:CalendarDay">
+                                    <Frame Margin="0"
+                                           Padding="0"
+                                           HeightRequest="42"
+                                           WidthRequest="42"
+                                           CornerRadius="21"
+                                           BackgroundColor="Transparent">
+                                            <Label Text="{Binding DayString}"
+                                                   FontSize="20"
+                                                   TextColor="{Binding MainColor, Converter={StaticResource StringToColor}}"
+                                                   VerticalOptions="Center"
+                                                   HorizontalOptions="Center"/>
+
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+
+                        </CollectionView>
+                        <Rectangle HeightRequest="1"
+                                   Margin="0,16,0,0"
+                                   BackgroundColor="{StaticResource Gray50}"
+                                   VerticalOptions="Start"
+                                   HorizontalOptions="Fill"/>
+                    </VerticalStackLayout>
+                    
+                </Frame>
+                
+                
+                <!--Grid for time option-->
+                <Grid RowDefinitions="*,Auto"
+                      ColumnDefinitions="56,*, *"
+                      HorizontalOptions="Fill"
+                      VerticalOptions="Start"
+                      HeightRequest="54"
+                      Padding="0"
+                      Margin="0">
+                    <Frame BackgroundColor="#007BFF"
+                           BorderColor="#007BFF"
+                           WidthRequest="32"
+                           HeightRequest="32"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Start"
+                           Margin="12,0,12,0"
+                           Padding="0">
+                        <Image Source="icon_clock.svg"
+                               WidthRequest="20"
+                               HeightRequest="20"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"/>
+                    </Frame>
+                    <Label Grid.Column="1"
+                           Text="Time"
+                           HorizontalOptions="Start"
+                           VerticalOptions="Center"
+                           FontSize="17"
+                           TextColor="Black"/>
+                    <switch:CustomSwitch Grid.Column="2"
+                                         HorizontalOptions="End"
+                                         VerticalOptions="Center"
+                                         Margin="0,0,12,0"
+                                         HeightRequest="31"
+                                         HorizontalKnobMargin="2"
+                                         IsToggled="{Binding IsToggled, Source={RelativeSource AncestorType={x:Type ContentView}}}"
+                                         KnobBackgroundColor="White"
+                                         KnobHeight="27"
+                                         KnobLimit="Boundary"
+                                         KnobWidth="27"
+                                         SemanticProperties.Hint="{Binding AccessibilityHint, Source={RelativeSource AncestorType={x:Type ContentView}}}"
+                                         SwitchPanUpdate="CustomSwitch_SwitchPanUpdate"
+                                         Toggled="CustomSwitch_Toggled"
+                                         ToggledCommand="{Binding ToggledCommand, Source={RelativeSource AncestorType={x:Type ContentView}}}"
+                                         WidthRequest="51">
+                        <switch:CustomSwitch.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </switch:CustomSwitch.StrokeShape>
+                        <switch:CustomSwitch.KnobStrokeShape>
+                            <RoundRectangle CornerRadius="18" />
+                        </switch:CustomSwitch.KnobStrokeShape>
+                    </switch:CustomSwitch>
+                </Grid>
+            </VerticalStackLayout>
+           
+        </Frame>
+        
+    </VerticalStackLayout>
+</ContentPage>

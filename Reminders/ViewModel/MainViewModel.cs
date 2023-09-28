@@ -20,6 +20,7 @@ public partial class MainViewModel : ObservableObject
     {
         this.dataStorageService = dataStorageService;
         this.Collection = this.dataStorageService.DataRetrieve();
+        
     }
 
     [RelayCommand]
@@ -130,7 +131,11 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     async Task GoToNewReminderAsync()
     {
-        await Shell.Current.GoToAsync($"{nameof(NewReminderPage)}", true);
+        await Shell.Current.GoToAsync($"{nameof(NewReminderPage)}", true, new Dictionary<string, object>
+        {
+            {"Title", string.Empty },
+            {"Description", string.Empty }
+        });
     }
 
     /*    [RelayCommand]
