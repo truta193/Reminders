@@ -116,7 +116,7 @@
                BackgroundColor="White"
                BorderColor="White">
 
-            <!--TODO Flex layout doesn't behave the way I want to, but dummy objects are messy as well, find a better solution-->
+            
             <CollectionView VerticalOptions="Start"
                             HorizontalOptions="Fill"
                             Margin="0"

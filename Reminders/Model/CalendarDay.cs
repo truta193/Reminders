@@ -8,11 +8,14 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Reminders.Model;
 
-public class CalendarDay
+public partial class CalendarDay : ObservableObject
 {
     public ObservableCollection<Color> events { get; set; } = new();
     public int Day { get; set; }
     public string DayString { get; set; }
-    public string MainColor { get; set; } = "#000000";
+    [ObservableProperty]
+    public string mainColor = "#000000";
+    [ObservableProperty]
+    public string backgColor  = "#FFFFFF";
     public CalendarDay() { }
 }

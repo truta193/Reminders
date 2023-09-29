@@ -9,11 +9,14 @@
              xmlns:viewmodel="clr-namespace:Reminders.ViewModel"
              xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              xmlns:service="clr-namespace:Reminders.Services"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              ios:Page.UseSafeArea="True"
              x:DataType="viewmodel:NewReminderDetalisViewModel">
 
     <ContentPage.Resources>
         <service:StringToColorConverter x:Key="StringToColor" />
+        <Animation x:Key="ScaleAnim"
+                   Name=""/>
     </ContentPage.Resources>
 
 
@@ -57,22 +60,23 @@
                        VerticalOptions="Center"
                        FontSize="17"
                        TextColor="Black"/>
-                    <switch:CustomSwitch Grid.Column="2"
-                                     HorizontalOptions="End"
-                                     VerticalOptions="Center"
-                                     Margin="0,0,12,0"
-                                     HeightRequest="31"
-                                     HorizontalKnobMargin="2"
-                                     IsToggled="{Binding IsToggled, Source={RelativeSource AncestorType={x:Type ContentView}}}"
-                                     KnobBackgroundColor="White"
-                                     KnobHeight="27"
-                                     KnobLimit="Boundary"
-                                     KnobWidth="27"
-                                     SemanticProperties.Hint="{Binding AccessibilityHint, Source={RelativeSource AncestorType={x:Type ContentView}}}"
-                                     SwitchPanUpdate="CustomSwitch_SwitchPanUpdate"
-                                     Toggled="CustomSwitch_Toggled"
-                                     ToggledCommand="{Binding ToggledCommand, Source={RelativeSource AncestorType={x:Type ContentView}}}"
-                                     WidthRequest="51">
+                    <switch:CustomSwitch x:Name="DateSwitch"
+                                         Grid.Column="2"
+                                         HorizontalOptions="End"
+                                         VerticalOptions="Center"
+                                         Margin="0,0,12,0"
+                                         HeightRequest="31"
+                                         HorizontalKnobMargin="2"
+                                         IsToggled="{Binding IsToggled, Source={RelativeSource AncestorType={x:Type ContentView}}}"
+                                         KnobBackgroundColor="White"
+                                         KnobHeight="27"
+                                         KnobLimit="Boundary"
+                                         KnobWidth="27"
+                                         SemanticProperties.Hint="{Binding AccessibilityHint, Source={RelativeSource AncestorType={x:Type ContentView}}}"
+                                         SwitchPanUpdate="CustomSwitch_SwitchPanUpdate"
+                                         Toggled="CustomSwitch_Toggled"
+                                         ToggledCommand="{Binding ToggledCommand, Source={RelativeSource AncestorType={x:Type ContentView}}}"
+                                         WidthRequest="51">
                         <switch:CustomSwitch.StrokeShape>
                             <RoundRectangle CornerRadius="20" />
                         </switch:CustomSwitch.StrokeShape>
@@ -95,7 +99,9 @@
                        VerticalOptions="Start"
                        HorizontalOptions="Fill"
                        BackgroundColor="Transparent"
-                       BorderColor="Transparent">
+                       BorderColor="Transparent"
+                       IsVisible="{Binding Source={x:Reference DateSwitch}, Path=IsToggled}">
+                    <!--Do animation here-->
                     <VerticalStackLayout Margin="0"
                                          Padding="0"
                                          VerticalOptions="Start"
@@ -120,8 +126,11 @@
                             </CollectionView.ItemsSource>
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
-                                    <Label Text="{Binding}" HorizontalOptions="Center" VerticalOptions="Center" FontSize="13" TextColor="{StaticResource Gray50}"/>
-
+                                    <Label Text="{Binding}" 
+                                           HorizontalOptions="Center" 
+                                           VerticalOptions="Center" 
+                                           FontSize="13" 
+                                           TextColor="{StaticResource Gray50}"/>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>
@@ -141,13 +150,19 @@
                                            HeightRequest="42"
                                            WidthRequest="42"
                                            CornerRadius="21"
-                                           BackgroundColor="Transparent">
+                                           BackgroundColor="{Binding BackgColor, Converter={StaticResource StringToColor}}"
+                                           BorderColor="Transparent">
                                             <Label Text="{Binding DayString}"
                                                    FontSize="20"
                                                    TextColor="{Binding MainColor, Converter={StaticResource StringToColor}}"
                                                    VerticalOptions="Center"
-                                                   HorizontalOptions="Center"/>
+                                                   HorizontalOptions="Center"
+                                                   BackgroundColor="Transparent"/>
 
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:NewReminderDetalisViewModel}}, Path=DaySelectCommand}"
+                                                                  CommandParameter="{Binding .}"/>
+                                        </Frame.GestureRecognizers>
                                     </Frame>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>

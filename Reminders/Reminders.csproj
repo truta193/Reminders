@@ -65,7 +65,6 @@
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 		<PackageReference Include="IeuanWalker.Maui.Switch" Version="1.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-		<PackageReference Include="XCalendar.Maui" Version="4.5.2" />
 	</ItemGroup>
 
 	<ItemGroup>

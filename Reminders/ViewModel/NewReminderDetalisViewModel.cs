@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Reminders.Model;
 using Reminders.Services;
 
@@ -26,7 +28,7 @@ public partial class NewReminderDetalisViewModel : ObservableObject
     [ObservableProperty]
     ReminderCollection collection;
     [ObservableProperty]
-    CalendarDay selectedDay;
+    CalendarDay selectedDay = null;
 
     DateTimeService dateService;
 
@@ -36,7 +38,35 @@ public partial class NewReminderDetalisViewModel : ObservableObject
         this.Collection = mvm.Collection;
         this.sundayOffset = 0;
         GenerateCalendarView((int)DateTime.Now.Year, (int)DateTime.Now.Month);
-    } 
+    }
+
+    [RelayCommand]
+    public void DaySelect(CalendarDay calendarDay)
+    {
+        if (calendarDay.Day == 0) { return; }
+
+        if (SelectedDay == null)
+        {
+            SelectedDay = calendarDay;
+        }
+        Debug.WriteLine(calendarDay.BackgColor, calendarDay.Day);
+        int index = Days.IndexOf(SelectedDay);
+        Days[index].BackgColor = "#FFFFFF";
+        if (SelectedDay.Day == (int)DateTime.Now.Day)
+        { 
+            Days[index].MainColor = "#007BFF"; 
+        }
+        else
+        {
+            Days[index].MainColor = "#000000";
+
+        }
+        index = Days.IndexOf(calendarDay);
+        Days[index].BackgColor = "#007BFF";
+        Days[index].MainColor = "#FFFFFF";
+
+        SelectedDay = calendarDay;
+    }
 
     public void GenerateCalendarView(int year, int month)
     {
