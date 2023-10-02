@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,8 +12,6 @@ using Reminders.View;
 
 namespace Reminders.ViewModel;
 
-[QueryProperty("Title", "Title")]
-[QueryProperty("Description", "Description")]
 public partial class NewReminderViewModel : ObservableObject
 {
     [ObservableProperty]
@@ -27,13 +26,26 @@ public partial class NewReminderViewModel : ObservableObject
     public string DisplayListColor => (SelectedList != null) ? SelectedList.MainColor : "#000000";
 
     [ObservableProperty]
-    string title = string.Empty;
+    string title;
     [ObservableProperty]
-    string description = string.Empty;
+    string description;
+    [ObservableProperty]
+    DateTime scheduledDate = DateTime.MinValue;
+    [ObservableProperty]
+    DateTime scheduledTime = DateTime.MinValue;
+    [ObservableProperty]
+    bool hasTime = false;
+    [ObservableProperty]
+    bool hasDate = false;
+    [ObservableProperty]
+    Reminder newReminder = new();
+    [ObservableProperty]
+    NewReminderDetalisViewModel nrdvm;
 
-    public NewReminderViewModel(MainViewModel mvm) 
+    public NewReminderViewModel(MainViewModel mvm, NewReminderDetalisViewModel nrdvm) 
     {
         this.Collection = mvm.Collection;
+        this.Nrdvm = nrdvm;
         if (mvm.Collection.Groups.Count == 0)
         {
             SelectedList = null;
@@ -56,12 +68,29 @@ public partial class NewReminderViewModel : ObservableObject
 
 
         //TEMPORARY BOOLS
-        Reminder newReminder = new(Title, Description, false, false);
+        Reminder newReminder = new();
+        newReminder.Title = Title; 
+        newReminder.Description = Description;
+        newReminder.CreatedAt = DateTime.Now;
+        newReminder.ScheduledAtTime = this.Nrdvm.TimeToggle ? this.Nrdvm.ScheduledTime : DateTime.MinValue;
+        newReminder.ScheduledAtDate =  this.Nrdvm.DateToggle ? this.Nrdvm.ScheduledDate : DateTime.MinValue;
+
+        Debug.WriteLine($"{newReminder.Title}, {newReminder.Description}, {newReminder.CreatedAt}, {newReminder.ScheduledAtDate}, {newReminder.ScheduledAtTime}");
+        //newReminder.ScheduledAtTime = Nrdvm.TimeToggle ? DateTime.MinValue + Nrdvm.SelectedTime : DateTime.MinValue;
+        //newReminder.ScheduledAtDate = Nrdvm.DateToggle ? new DateTime(Nrdvm.SelectedYear, Nrdvm.SelectedMonth, Nrdvm.IntDay) : DateTime.MinValue;
+
+        //TODO repeating
+        newReminder.IsRepeating = false;
+
         Collection.Groups[index].Add(newReminder);
 
         //Reset state, since it's a singleton page
         this.Title = string.Empty;
         this.Description = string.Empty;
+        this.Nrdvm.DateToggle = false;
+        this.Nrdvm.TimeToggle = false;
+        this.Nrdvm.SelectedTime = TimeSpan.Zero;
+        this.Nrdvm.SelectedDay = null;
 
         await Shell.Current.GoToAsync("../", true);
         
@@ -79,5 +108,5 @@ public partial class NewReminderViewModel : ObservableObject
         await Shell.Current.GoToAsync($"{nameof(NewReminderDetailsPage)}", true);
     }
 
-    
+
 }

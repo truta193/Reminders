@@ -16,9 +16,9 @@ public class Reminder
     [XmlAttribute]
     public DateTime CreatedAt { get; set; }
     [XmlAttribute]
-    public DateTime StartingAt { get; set; }
+    public DateTime ScheduledAtDate { get; set; }
     [XmlAttribute]
-    public DateTime EndingAt { get; set; }
+    public DateTime ScheduledAtTime { get; set; }
     [XmlAttribute]
     public bool IsAllDay { get; set; }
     [XmlAttribute]

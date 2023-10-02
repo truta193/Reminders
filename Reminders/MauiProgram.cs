@@ -63,7 +63,7 @@ public static class MauiProgram
         builder.Services.AddTransient<NewListViewModel>();
 		builder.Services.AddSingleton<NewReminderViewModel>();
 		builder.Services.AddTransient<NewReminderListSelectViewModel>();
-		builder.Services.AddTransient<NewReminderDetalisViewModel>();
+		builder.Services.AddSingleton<NewReminderDetalisViewModel>();
 
 
         builder.Services.AddSingleton<MainPage>();
@@ -71,7 +71,7 @@ public static class MauiProgram
         builder.Services.AddTransient<NewListPage>();
 		builder.Services.AddTransient<NewReminderPage>();
 		builder.Services.AddTransient<NewReminderListSelectPage>();
-        builder.Services.AddTransient<NewReminderDetailsPage>();
+        builder.Services.AddSingleton<NewReminderDetailsPage>();
 
 
 

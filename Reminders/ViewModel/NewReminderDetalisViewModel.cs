@@ -17,18 +17,45 @@ public partial class NewReminderDetalisViewModel : ObservableObject
     [ObservableProperty]
     public ObservableCollection<CalendarDay> days;
     //TODO Settings file
-    [ObservableProperty]
     int sundayOffset = 0;
-    [ObservableProperty]
     int offset;
-    [ObservableProperty]
     int selectedMonth;
-    [ObservableProperty]
     int selectedYear;
     [ObservableProperty]
-    ReminderCollection collection;
-    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ScheduledDate))]
     CalendarDay selectedDay = null;
+
+    partial void OnSelectedDayChanged(CalendarDay value)
+    {
+        if (value == null)
+        {
+            this.SelectedDay = Days[this.offset + (int)DateTime.Now.Day - 1];
+        }
+    }
+
+    [ObservableProperty]
+    ReminderCollection collection;
+
+
+    [ObservableProperty]
+    ObservableCollection<string> hours = new();
+    [ObservableProperty]
+    ObservableCollection<string> minutes = new();
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ScheduledDate))]
+    bool dateToggle = false;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ScheduledTime))]
+
+    bool timeToggle = false;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ScheduledTime))]
+    TimeSpan selectedTime = TimeSpan.Zero;
+
+    public DateTime ScheduledDate => DateToggle ? new DateTime(selectedYear, selectedMonth, SelectedDay.Day) : new DateTime();
+    public DateTime ScheduledTime => TimeToggle ? new DateTime() + SelectedTime : new DateTime();
+
 
     DateTimeService dateService;
 
@@ -38,6 +65,23 @@ public partial class NewReminderDetalisViewModel : ObservableObject
         this.Collection = mvm.Collection;
         this.sundayOffset = 0;
         GenerateCalendarView((int)DateTime.Now.Year, (int)DateTime.Now.Month);
+        DaySelect(Days[this.offset + (int)DateTime.Now.Day - 1]);
+        #region 
+        for (int i = 0; i < 24; i++)
+        {
+            if (i < 10)
+                hours.Add($"0{i}");
+            else
+                hours.Add($"{i}");
+        }
+        for (int i = 0; i < 60;  i++)
+        {
+            if (i < 10)
+                minutes.Add($"0{i}");
+            else
+                minutes.Add($"{i}");
+        }
+        #endregion
     }
 
     [RelayCommand]
@@ -49,9 +93,9 @@ public partial class NewReminderDetalisViewModel : ObservableObject
         {
             SelectedDay = calendarDay;
         }
-        Debug.WriteLine(calendarDay.BackgColor, calendarDay.Day);
+        Debug.WriteLine(calendarDay.BackColor, calendarDay.Day);
         int index = Days.IndexOf(SelectedDay);
-        Days[index].BackgColor = "#FFFFFF";
+        Days[index].BackColor = "#FFFFFF";
         if (SelectedDay.Day == (int)DateTime.Now.Day)
         { 
             Days[index].MainColor = "#007BFF"; 
@@ -62,7 +106,7 @@ public partial class NewReminderDetalisViewModel : ObservableObject
 
         }
         index = Days.IndexOf(calendarDay);
-        Days[index].BackgColor = "#007BFF";
+        Days[index].BackColor = "#007BFF";
         Days[index].MainColor = "#FFFFFF";
 
         SelectedDay = calendarDay;
@@ -78,31 +122,31 @@ public partial class NewReminderDetalisViewModel : ObservableObject
         {
             Days = new();
         }
-        SelectedYear = year;
-        SelectedMonth = month;
-        this.Offset = dateService.GetFirstDayOfTheMonthCustomOffset(SelectedYear, SelectedMonth, SundayOffset);
+        selectedYear = year;
+        selectedMonth = month;
+        this.offset = dateService.GetFirstDayOfTheMonthCustomOffset(selectedYear, selectedMonth, sundayOffset);
 
-        for (int i = 0; i < this.Offset; i++)
+        for (int i = 0; i < this.offset; i++)
         {
             CalendarDay d = new();
             d.Day = 0;
             d.DayString = string.Empty;
             Days.Add(d);
         }
-        for (int i = 1; i <= DateTime.DaysInMonth(SelectedYear, SelectedMonth); i++)
+        for (int i = 1; i <= DateTime.DaysInMonth(selectedYear, selectedMonth); i++)
         {
             CalendarDay d = new();
             d.Day = i;
             d.DayString = d.Day.ToString();
             Days.Add(d);
         }
-        int index = this.Offset + (int)DateTime.Now.Day - 1;
-        Days[this.Offset + (int)DateTime.Now.Day - 1].MainColor = "#007BFF";
+        int index = this.offset + (int)DateTime.Now.Day - 1;
+        Days[this.offset + (int)DateTime.Now.Day - 1].MainColor = "#007BFF";
         foreach (ReminderGroup list in Collection.Groups)
         {
             foreach (Reminder reminder in list.Reminders)
             {
-                Days[(int)reminder.StartingAt.Day].events.Add(Color.FromArgb(list.MainColor));
+                Days[(int)reminder.ScheduledAtDate.Day].events.Add(Color.FromArgb(list.MainColor));
             }
         }
     }

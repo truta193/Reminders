@@ -16,6 +16,6 @@ public partial class CalendarDay : ObservableObject
     [ObservableProperty]
     public string mainColor = "#000000";
     [ObservableProperty]
-    public string backgColor  = "#FFFFFF";
+    public string backColor  = "#FFFFFF";
     public CalendarDay() { }
 }
