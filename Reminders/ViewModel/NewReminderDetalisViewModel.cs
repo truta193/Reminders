@@ -47,7 +47,6 @@ public partial class NewReminderDetalisViewModel : ObservableObject
     bool dateToggle = false;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ScheduledTime))]
-
     bool timeToggle = false;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ScheduledTime))]

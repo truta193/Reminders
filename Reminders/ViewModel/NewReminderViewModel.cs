@@ -75,11 +75,7 @@ public partial class NewReminderViewModel : ObservableObject
         newReminder.ScheduledAtTime = this.Nrdvm.TimeToggle ? this.Nrdvm.ScheduledTime : DateTime.MinValue;
         newReminder.ScheduledAtDate =  this.Nrdvm.DateToggle ? this.Nrdvm.ScheduledDate : DateTime.MinValue;
 
-        Debug.WriteLine($"{newReminder.Title}, {newReminder.Description}, {newReminder.CreatedAt}, {newReminder.ScheduledAtDate}, {newReminder.ScheduledAtTime}");
-        //newReminder.ScheduledAtTime = Nrdvm.TimeToggle ? DateTime.MinValue + Nrdvm.SelectedTime : DateTime.MinValue;
-        //newReminder.ScheduledAtDate = Nrdvm.DateToggle ? new DateTime(Nrdvm.SelectedYear, Nrdvm.SelectedMonth, Nrdvm.IntDay) : DateTime.MinValue;
-
-        //TODO repeating
+        Debug.WriteLine($"{newReminder.Title}, {newReminder.Description}, {newReminder.CreatedAt}, {newReminder.ScheduledAtDate}, {newReminder.ScheduledAtTime}");        //TODO repeating
         newReminder.IsRepeating = false;
 
         Collection.Groups[index].Add(newReminder);
