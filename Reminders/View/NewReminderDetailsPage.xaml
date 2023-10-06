@@ -48,11 +48,14 @@
                        HorizontalOptions="Start"
                        Margin="12,0,12,0"
                        Padding="0">
-                        <Image Source="icon_scheduled.svg"
-                           WidthRequest="21"
-                           HeightRequest="20"
-                           VerticalOptions="Center"
-                           HorizontalOptions="Center"/>
+                        <VerticalStackLayout VerticalOptions="Center"
+                                             HorizontalOptions="Center">
+                            <Image Source="icon_scheduled.svg"
+                               WidthRequest="21"
+                               HeightRequest="20"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
                     </Frame>
                     <Label Grid.Column="1"
                        Text="Date"
@@ -93,6 +96,50 @@
                            Grid.ColumnSpan="3"
                            Margin="0,0,12,0"/>
                 </Grid>
+                <HorizontalStackLayout>
+                    <!--Picker for month-->
+
+                    <Picker x:Name="MonthPicker"
+                                Title="Month"
+                                ItemsSource="{Binding Months}"
+                                SelectedItem="{Binding selectedMonthString}"
+                                ItemDisplayBinding="{Binding .}"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Center"
+                                Margin="0"
+                                FontSize="17"
+                                TextColor="Black"
+                                BackgroundColor="Transparent"
+                                TitleColor="Black"
+                                FontAttributes="Bold">
+                        <Picker.Behaviors>
+                            <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
+                                                            Command="{Binding UpdateCalendarMonthFromPickerCommand}"
+                                                            CommandParameter="{Binding Source={x:Reference MonthPicker}, Path=SelectedItem}"/>
+                        </Picker.Behaviors>
+                    </Picker>
+                    <!--Picker for year-->
+                    <Picker x:Name="YearPicker"
+                                Title="Year"
+                                ItemsSource="{Binding Years}"
+                                SelectedItem="{Binding SelectedYear}"
+                                ItemDisplayBinding="{Binding .}"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Center"
+                                Margin="0"
+                                FontSize="17"
+                                TextColor="Black"
+                                BackgroundColor="Transparent"
+                                TitleColor="Black"
+                                FontAttributes="Bold">
+                        <Picker.Behaviors>
+                            <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
+                                                            Command="{Binding UpdateCalendarYearFromPickerCommand}"
+                                                            CommandParameter="{Binding Source={x:Reference YearPicker}, Path=SelectedItem}"/>
+                        </Picker.Behaviors>
+                    </Picker>
+
+                </HorizontalStackLayout>
                 <!--Calendar-->
                 <Frame Margin="12,0,12,0"
                        Padding="0"
@@ -101,15 +148,95 @@
                        BackgroundColor="Transparent"
                        BorderColor="Transparent"
                        IsVisible="{Binding Source={x:Reference DateSwitch}, Path=IsToggled}">
-                    <!--Do animation here-->
-                    <VerticalStackLayout Margin="0"
+                    <VerticalStackLayout Margin="0, 16, 0, 0"
                                          Padding="0"
                                          VerticalOptions="Start"
                                          HorizontalOptions="Fill">
+                        <!--Year/Month selector-->
+                        <Grid RowDefinitions="Auto"
+                              ColumnDefinitions="Auto, Auto, *, Auto, Auto"
+                              Margin="12, 0, 12, 0">
+                            <Label Text="{Binding DisplayDate}"
+                                   FontSize="17"
+                                   FontAttributes="Bold"
+                                   Margin="0"
+                                   HorizontalOptions="Start"
+                                   VerticalOptions="Center"/>
+                            <Frame Padding="0"
+                                   Margin="10, 0, 0, 0"
+                                   Grid.Column="1"
+                                   BackgroundColor="Transparent"
+                                   BorderColor="Transparent"
+                                   HorizontalOptions="Start"
+                                   VerticalOptions="Center">
+                                <VerticalStackLayout VerticalOptions="Center"
+                                             HorizontalOptions="Center">
+                                    <Image Source="icon_arrow_right.svg"
+                                       HeightRequest="20"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Start">
+                                        <Image.Behaviors>
+                                            <toolkit:IconTintColorBehavior TintColor="{StaticResource Blue90}"/>
+                                        </Image.Behaviors>
+                                    </Image>
+                                </VerticalStackLayout>
+                            </Frame>
+                            <Frame Padding="0"
+                                   Margin="0"
+                                   Grid.Column="3"
+                                   BackgroundColor="Transparent"
+                                   BorderColor="Transparent"
+                                   HorizontalOptions="Start"
+                                   VerticalOptions="Center">
+                                <VerticalStackLayout VerticalOptions="Center"
+                                             HorizontalOptions="Center">
+                                    <Image Source="icon_arrow_right.svg"
+                                       HeightRequest="24"
+                                       WidthRequest="18"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Start"
+                                       Rotation="180">
+                                        <Image.Behaviors>
+                                            <toolkit:IconTintColorBehavior TintColor="{StaticResource Blue90}"/>
+                                        </Image.Behaviors>
+                                    </Image>
+                                </VerticalStackLayout>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer  Command="{Binding PreviousMonthCommand}"/>
+                                </Frame.GestureRecognizers>
+                            </Frame>
+                            <Frame Padding="0"
+                                   Margin="20, 0, 0, 0"
+                                   Grid.Column="4"
+                                   BackgroundColor="Transparent"
+                                   BorderColor="Transparent"
+                                   HorizontalOptions="Start"
+                                   VerticalOptions="Center">
+                                <VerticalStackLayout VerticalOptions="Center"
+                                             HorizontalOptions="Center">
+                                    <Image Source="icon_arrow_right.svg"
+                                       HeightRequest="24"
+                                       WidthRequest="18"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Start">
+                                        <Image.Behaviors>
+                                            <toolkit:IconTintColorBehavior TintColor="{StaticResource Blue90}"/>
+                                        </Image.Behaviors>
+                                    </Image>
+                                </VerticalStackLayout>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding NextMonthCommand}"/>
+                                </Frame.GestureRecognizers>
+                            </Frame>
+                        </Grid>
+
                         <!--Day names-->
                         <CollectionView Margin="0,12,0,12"
                                         VerticalOptions="Start"
-                                        HorizontalOptions="Fill">
+                                        HorizontalOptions="Fill"
+                                        SelectionMode="None"
+                                        HorizontalScrollBarVisibility="Never"
+                                        VerticalScrollBarVisibility="Never">
                             <CollectionView.ItemsLayout>
                                 <GridItemsLayout Orientation="Vertical" Span="7"/>
                             </CollectionView.ItemsLayout>
@@ -138,7 +265,8 @@
                         <CollectionView Margin="0"
                                         VerticalOptions="Start"
                                         HorizontalOptions="Center"
-                                        ItemsSource="{Binding Days}">
+                                        ItemsSource="{Binding Days}"
+                                        SelectionMode="None">
                             <CollectionView.ItemsLayout>
                                 <GridItemsLayout Orientation="Vertical" Span="7"/>
                             </CollectionView.ItemsLayout>
@@ -152,13 +280,15 @@
                                            CornerRadius="21"
                                            BackgroundColor="{Binding BackColor, Converter={StaticResource StringToColor}}"
                                            BorderColor="Transparent">
+                                        <VerticalStackLayout VerticalOptions="Center"
+                                             HorizontalOptions="Center">
                                             <Label Text="{Binding DayString}"
                                                    FontSize="20"
                                                    TextColor="{Binding MainColor, Converter={StaticResource StringToColor}}"
                                                    VerticalOptions="Center"
                                                    HorizontalOptions="Center"
                                                    BackgroundColor="Transparent"/>
-
+                                        </VerticalStackLayout>
                                         <Frame.GestureRecognizers>
                                             <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:NewReminderDetalisViewModel}}, Path=DaySelectCommand}"
                                                                   CommandParameter="{Binding .}"/>
@@ -173,6 +303,7 @@
                                    BackgroundColor="{StaticResource Gray50}"
                                    VerticalOptions="Start"
                                    HorizontalOptions="Fill"/>
+                       
                     </VerticalStackLayout>
                     
                 </Frame>
@@ -193,11 +324,14 @@
                            HorizontalOptions="Start"
                            Margin="12,0,12,0"
                            Padding="0">
-                        <Image Source="icon_clock.svg"
+                        <VerticalStackLayout VerticalOptions="Center"
+                                             HorizontalOptions="Center">
+                            <Image Source="icon_clock.svg"
                                WidthRequest="20"
                                HeightRequest="20"
                                VerticalOptions="Center"
                                HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
                     </Frame>
                     <Label Grid.Column="1"
                            Text="Time"

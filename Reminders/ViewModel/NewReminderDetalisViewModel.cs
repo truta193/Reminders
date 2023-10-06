@@ -16,11 +16,37 @@ public partial class NewReminderDetalisViewModel : ObservableObject
 {
     [ObservableProperty]
     public ObservableCollection<CalendarDay> days;
+    [ObservableProperty]
+    ObservableCollection<string> months = new() { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    [ObservableProperty]
+    ObservableCollection<int> years = new() { 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028 };
     //TODO Settings file
     int sundayOffset = 0;
     int offset;
-    int selectedMonth;
-    int selectedYear;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(selectedMonthString))]
+    [NotifyPropertyChangedFor(nameof(DisplayDate))]
+
+    int selectedMonth = (int)DateTime.Now.Month;
+
+    partial void OnSelectedMonthChanged(int value)
+    {
+        GenerateCalendarView(SelectedYear, SelectedMonth);
+    }
+
+    public string selectedMonthString => dateService.GetMonthName(SelectedMonth);
+
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DisplayDate))]
+    int selectedYear = DateTime.Now.Year;
+
+    partial void OnSelectedYearChanged(int value)
+    {
+        GenerateCalendarView(SelectedYear, SelectedMonth);
+    }
+
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ScheduledDate))]
     CalendarDay selectedDay = null;
@@ -51,8 +77,10 @@ public partial class NewReminderDetalisViewModel : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ScheduledTime))]
     TimeSpan selectedTime = TimeSpan.Zero;
+    
+    public string DisplayDate => dateService.GetMonthName(SelectedMonth) + " " + SelectedYear.ToString();
 
-    public DateTime ScheduledDate => DateToggle ? new DateTime(selectedYear, selectedMonth, SelectedDay.Day) : new DateTime();
+    public DateTime ScheduledDate => DateToggle ? new DateTime(SelectedYear, SelectedMonth, SelectedDay.Day) : new DateTime();
     public DateTime ScheduledTime => TimeToggle ? new DateTime() + SelectedTime : new DateTime();
 
 
@@ -63,24 +91,18 @@ public partial class NewReminderDetalisViewModel : ObservableObject
         this.dateService = new();
         this.Collection = mvm.Collection;
         this.sundayOffset = 0;
-        GenerateCalendarView((int)DateTime.Now.Year, (int)DateTime.Now.Month);
+        GenerateCalendarView(SelectedYear, SelectedMonth);
         DaySelect(Days[this.offset + (int)DateTime.Now.Day - 1]);
-        #region 
+      
         for (int i = 0; i < 24; i++)
         {
-            if (i < 10)
-                hours.Add($"0{i}");
-            else
-                hours.Add($"{i}");
+            Hours.Add(i.ToString("D2"));
         }
-        for (int i = 0; i < 60;  i++)
+        for (int i = 0; i < 60; i++)
         {
-            if (i < 10)
-                minutes.Add($"0{i}");
-            else
-                minutes.Add($"{i}");
+            Minutes.Add(i.ToString("D2"));
         }
-        #endregion
+
     }
 
     [RelayCommand]
@@ -92,8 +114,23 @@ public partial class NewReminderDetalisViewModel : ObservableObject
         {
             SelectedDay = calendarDay;
         }
-        Debug.WriteLine(calendarDay.BackColor, calendarDay.Day);
+        
+        //Selected day will be null if the user selects a day in a different month, write a guard clause to fix this
+
+
         int index = Days.IndexOf(SelectedDay);
+        if (index < 0)
+        {
+            foreach (CalendarDay day in Days)
+            {
+                if (SelectedDay.Day == day.Day)
+                {
+                    index = Days.IndexOf(day);
+                    break;
+                }
+            }
+        }
+        if (index < 0) { return; }
         Days[index].BackColor = "#FFFFFF";
         if (SelectedDay.Day == (int)DateTime.Now.Day)
         { 
@@ -121,9 +158,7 @@ public partial class NewReminderDetalisViewModel : ObservableObject
         {
             Days = new();
         }
-        selectedYear = year;
-        selectedMonth = month;
-        this.offset = dateService.GetFirstDayOfTheMonthCustomOffset(selectedYear, selectedMonth, sundayOffset);
+        this.offset = dateService.GetFirstDayOfTheMonthCustomOffset(SelectedYear, SelectedMonth, sundayOffset);
 
         for (int i = 0; i < this.offset; i++)
         {
@@ -132,7 +167,7 @@ public partial class NewReminderDetalisViewModel : ObservableObject
             d.DayString = string.Empty;
             Days.Add(d);
         }
-        for (int i = 1; i <= DateTime.DaysInMonth(selectedYear, selectedMonth); i++)
+        for (int i = 1; i <= DateTime.DaysInMonth(SelectedYear, SelectedMonth); i++)
         {
             CalendarDay d = new();
             d.Day = i;
@@ -140,7 +175,11 @@ public partial class NewReminderDetalisViewModel : ObservableObject
             Days.Add(d);
         }
         int index = this.offset + (int)DateTime.Now.Day - 1;
-        Days[this.offset + (int)DateTime.Now.Day - 1].MainColor = "#007BFF";
+        if (SelectedMonth == DateTime.Now.Month && SelectedYear == DateTime.Now.Year)
+        {
+            Days[this.offset + (int)DateTime.Now.Day - 1].MainColor = "#007BFF";
+        }
+
         foreach (ReminderGroup list in Collection.Groups)
         {
             foreach (Reminder reminder in list.Reminders)
@@ -148,6 +187,51 @@ public partial class NewReminderDetalisViewModel : ObservableObject
                 Days[(int)reminder.ScheduledAtDate.Day].events.Add(Color.FromArgb(list.MainColor));
             }
         }
+    }
+
+    [RelayCommand]
+    public void NextMonth()
+    {
+        if (SelectedMonth == 12)
+        {
+            SelectedMonth = 1;
+            SelectedYear++;
+        }
+        else
+        {
+            SelectedMonth++;
+        }
+        
+        GenerateCalendarView(SelectedYear, SelectedMonth);
+    }
+
+    [RelayCommand]
+    public void PreviousMonth()
+    {
+        //Write a guard clause to check if year is valid
+        if (SelectedMonth == 1)
+        {
+            SelectedMonth = 12;
+            SelectedYear--;
+        }
+        else
+        {
+            SelectedMonth--;
+        }
+       
+        GenerateCalendarView(SelectedYear, SelectedMonth);
+    }
+
+    [RelayCommand]
+    public void UpdateCalendarMonthFromPicker(string monthString)
+    {
+        SelectedMonth = Months.IndexOf(monthString) + 1;
+    }
+
+    [RelayCommand]
+    public void UpdateCalendarYearFromPicker(int year)
+    {
+        SelectedYear = year;
     }
 
 }

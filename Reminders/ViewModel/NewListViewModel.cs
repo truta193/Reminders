@@ -8,6 +8,8 @@ using Reminders.Model;
 namespace Reminders.ViewModel;
 //TODO There's a delay when opening the page
 //TODO Save to XML when adding!!!!!!
+//TODO Add a way to change the icon
+
 public partial class NewListViewModel : ObservableObject
 {
     [ObservableProperty]

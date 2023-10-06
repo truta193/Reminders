@@ -8,11 +8,13 @@ namespace Reminders.Services;
 
 class DateTimeService
 {
-
-
-
     public DateTimeService()
     {
+    }
+
+    public string GetMonthName(int month)
+    {
+        return new DateTime(1, month, 1).ToString("MMMM");
     }
 
     public int GetFirstDayOfTheMonthSundayOffset(int year, int month)
