@@ -69,6 +69,14 @@ public partial class NewReminderDetalisViewModel : ObservableObject
     ObservableCollection<string> minutes = new();
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(myRotation))]
+    bool isMYSelectorVisible = false;
+
+    
+    public int myRotation => IsMYSelectorVisible ? 90 : 0;
+
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ScheduledDate))]
     bool dateToggle = false;
     [ObservableProperty]
@@ -150,6 +158,7 @@ public partial class NewReminderDetalisViewModel : ObservableObject
 
     public void GenerateCalendarView(int year, int month)
     {
+
         if (Days != null)
         {
             Days.Clear();
@@ -232,6 +241,12 @@ public partial class NewReminderDetalisViewModel : ObservableObject
     public void UpdateCalendarYearFromPicker(int year)
     {
         SelectedYear = year;
+    }
+
+    [RelayCommand]
+    public void UpdateMYSelectorVisibility()
+    {
+        IsMYSelectorVisible = !IsMYSelectorVisible;
     }
 
 }

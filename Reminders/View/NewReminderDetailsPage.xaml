@@ -96,50 +96,7 @@
                            Grid.ColumnSpan="3"
                            Margin="0,0,12,0"/>
                 </Grid>
-                <HorizontalStackLayout>
-                    <!--Picker for month-->
-
-                    <Picker x:Name="MonthPicker"
-                                Title="Month"
-                                ItemsSource="{Binding Months}"
-                                SelectedItem="{Binding selectedMonthString}"
-                                ItemDisplayBinding="{Binding .}"
-                                HorizontalOptions="Fill"
-                                VerticalOptions="Center"
-                                Margin="0"
-                                FontSize="17"
-                                TextColor="Black"
-                                BackgroundColor="Transparent"
-                                TitleColor="Black"
-                                FontAttributes="Bold">
-                        <Picker.Behaviors>
-                            <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
-                                                            Command="{Binding UpdateCalendarMonthFromPickerCommand}"
-                                                            CommandParameter="{Binding Source={x:Reference MonthPicker}, Path=SelectedItem}"/>
-                        </Picker.Behaviors>
-                    </Picker>
-                    <!--Picker for year-->
-                    <Picker x:Name="YearPicker"
-                                Title="Year"
-                                ItemsSource="{Binding Years}"
-                                SelectedItem="{Binding SelectedYear}"
-                                ItemDisplayBinding="{Binding .}"
-                                HorizontalOptions="Fill"
-                                VerticalOptions="Center"
-                                Margin="0"
-                                FontSize="17"
-                                TextColor="Black"
-                                BackgroundColor="Transparent"
-                                TitleColor="Black"
-                                FontAttributes="Bold">
-                        <Picker.Behaviors>
-                            <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
-                                                            Command="{Binding UpdateCalendarYearFromPickerCommand}"
-                                                            CommandParameter="{Binding Source={x:Reference YearPicker}, Path=SelectedItem}"/>
-                        </Picker.Behaviors>
-                    </Picker>
-
-                </HorizontalStackLayout>
+                
                 <!--Calendar-->
                 <Frame Margin="12,0,12,0"
                        Padding="0"
@@ -172,14 +129,18 @@
                                 <VerticalStackLayout VerticalOptions="Center"
                                              HorizontalOptions="Center">
                                     <Image Source="icon_arrow_right.svg"
-                                       HeightRequest="20"
-                                       VerticalOptions="Center"
-                                       HorizontalOptions="Start">
+                                           HeightRequest="20"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="Start"
+                                           Rotation="{Binding myRotation}">
                                         <Image.Behaviors>
                                             <toolkit:IconTintColorBehavior TintColor="{StaticResource Blue90}"/>
                                         </Image.Behaviors>
                                     </Image>
                                 </VerticalStackLayout>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding UpdateMYSelectorVisibilityCommand}"/>
+                                </Frame.GestureRecognizers>
                             </Frame>
                             <Frame Padding="0"
                                    Margin="0"
@@ -229,6 +190,52 @@
                                 </Frame.GestureRecognizers>
                             </Frame>
                         </Grid>
+
+                        <HorizontalStackLayout IsVisible="{Binding IsMYSelectorVisible}"
+                                               Margin="12,0,12,0">
+                            <!--Picker for month-->
+
+                            <Picker x:Name="MonthPicker"
+                                Title="Month"
+                                ItemsSource="{Binding Months}"
+                                SelectedItem="{Binding selectedMonthString}"
+                                ItemDisplayBinding="{Binding .}"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Center"
+                                Margin="0"
+                                FontSize="17"
+                                TextColor="Black"
+                                BackgroundColor="Transparent"
+                                TitleColor="Black"
+                                FontAttributes="Bold">
+                                <Picker.Behaviors>
+                                    <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
+                                                            Command="{Binding UpdateCalendarMonthFromPickerCommand}"
+                                                            CommandParameter="{Binding Source={x:Reference MonthPicker}, Path=SelectedItem}"/>
+                                </Picker.Behaviors>
+                            </Picker>
+                            <!--Picker for year-->
+                            <Picker x:Name="YearPicker"
+                                Title="Year"
+                                ItemsSource="{Binding Years}"
+                                SelectedItem="{Binding SelectedYear}"
+                                ItemDisplayBinding="{Binding .}"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Center"
+                                Margin="0"
+                                FontSize="17"
+                                TextColor="Black"
+                                BackgroundColor="Transparent"
+                                TitleColor="Black"
+                                FontAttributes="Bold">
+                                <Picker.Behaviors>
+                                    <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
+                                                            Command="{Binding UpdateCalendarYearFromPickerCommand}"
+                                                            CommandParameter="{Binding Source={x:Reference YearPicker}, Path=SelectedItem}"/>
+                                </Picker.Behaviors>
+                            </Picker>
+
+                        </HorizontalStackLayout>
 
                         <!--Day names-->
                         <CollectionView Margin="0,12,0,12"
