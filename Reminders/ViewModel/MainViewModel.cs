@@ -9,18 +9,25 @@ using Reminders.View;
 
 namespace Reminders.ViewModel;
 
-
 public partial class MainViewModel : ObservableObject
 {
     private DataStorageService dataStorageService;
     [ObservableProperty]
-    public ReminderCollection collection;
+    [NotifyPropertyChangedFor(nameof(TodayReminders))]
+    public ReminderCollection collection = null;
+
+    [ObservableProperty]
+    public ReminderGroup todayReminders = null;
+
+    [ObservableProperty]
+    public int todayReminderCount = 0;
 
     public MainViewModel(DataStorageService dataStorageService)
     {
         this.dataStorageService = dataStorageService;
         this.Collection = this.dataStorageService.DataRetrieve();
-        
+        TodayReminders = new ReminderGroup("Today",  Color.FromArgb("#000000"), 0);
+        GetTodayReminders();
     }
 
     [RelayCommand]
@@ -110,6 +117,39 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
+    public void GetTodayReminders()
+    {
+        if (TodayReminders == null)
+        {
+            return;
+        }
+        TodayReminders.Reminders.Clear();
+        foreach (ReminderGroup group in this.Collection.Groups)
+        {
+            foreach (Reminder reminder in group.Reminders)
+            {
+                if (reminder.ScheduledAtDate.Equals(DateTime.Today.Date))
+                {
+                    TodayReminders.Add(reminder);
+                    Debug.WriteLine($"Added {reminder.Title}");
+                }
+            }
+        }
+
+        TodayReminderCount = TodayReminders.Reminders.Count;
+
+    }
+
+    [RelayCommand]
+    async Task GoToTodayRemindersAsync()
+    {
+        await Shell.Current.GoToAsync($"{nameof(GroupListPage)}", true,
+            new Dictionary<string, object> {
+                { "Group", TodayReminders }
+            });
+    }
+
+    [RelayCommand]
     async Task GoToGroupListAsync(ReminderGroup group)
     {
         if (group is null)
@@ -137,24 +177,5 @@ public partial class MainViewModel : ObservableObject
             {"Description", string.Empty }
         });
     }
-
-    /*    [RelayCommand]
-        public void GetTodayReminders()
-        {
-            Debug.WriteLine(DateTime.Today.Date);
-            //ObservableCollection<Reminder> reminders = new();
-            foreach (ReminderGroup group in this.Collection.Groups)
-            {
-                foreach (Reminder reminder in group.Reminders)
-                {
-                    if (reminder.StartingAt.Date.Equals(DateTime.Today.Date))
-                    {
-                        //reminders.Add(reminder);
-                        Debug.WriteLine($"Added {reminder.Title}");
-                    }
-                }
-            }
-
-        }*/
 }
 

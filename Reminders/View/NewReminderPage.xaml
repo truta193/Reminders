@@ -15,6 +15,11 @@
     <ContentPage.Resources>
         <service:StringToColorConverter x:Key="StringToColor" />
     </ContentPage.Resources>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Add item"
+                     IconImageSource="icon_plus.svg"
+                     Command="{Binding AddNewReminderCommand}"/>
+    </ContentPage.ToolbarItems>
 
     <VerticalStackLayout Margin="16"
                          Padding="0"
@@ -156,8 +161,5 @@
             </Grid>
 
         </Frame>
-        <Button Text="Add reminder TEMP BUTTON"
-                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:NewReminderViewModel}}, Path=AddNewReminderCommand}"/>
-
     </VerticalStackLayout>
 </ContentPage>

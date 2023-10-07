@@ -41,10 +41,13 @@ public partial class NewReminderViewModel : ObservableObject
     Reminder newReminder = new();
     [ObservableProperty]
     NewReminderDetalisViewModel nrdvm;
+    [ObservableProperty]
+    MainViewModel mvm;
 
     public NewReminderViewModel(MainViewModel mvm, NewReminderDetalisViewModel nrdvm) 
     {
         this.Collection = mvm.Collection;
+        this.Mvm = mvm;
         this.Nrdvm = nrdvm;
         if (mvm.Collection.Groups.Count == 0)
         {
@@ -58,7 +61,7 @@ public partial class NewReminderViewModel : ObservableObject
     }
 
     [RelayCommand]
-    async Task AddNewReminder()
+    public async Task AddNewReminder()
     {
         if (SelectedList == null) { return; }
 
@@ -88,6 +91,7 @@ public partial class NewReminderViewModel : ObservableObject
         this.Nrdvm.SelectedTime = TimeSpan.Zero;
         this.Nrdvm.SelectedDay = null;
 
+        this.Mvm.GetTodayReminders();
         await Shell.Current.GoToAsync("../", true);
         
     }

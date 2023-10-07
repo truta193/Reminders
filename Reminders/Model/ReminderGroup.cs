@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.VisualBasic;
 
 namespace Reminders.Model;

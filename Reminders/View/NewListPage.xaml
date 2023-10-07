@@ -11,6 +11,12 @@
              Title="Add List"
              BackgroundColor="#F2F2F6">
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Add item"
+                     IconImageSource="icon_plus.svg"
+                     Command="{Binding AddNewListCommand}"/>
+    </ContentPage.ToolbarItems>
+
     <ContentPage.Resources>
         <ResourceDictionary>
 
@@ -116,7 +122,7 @@
                BackgroundColor="White"
                BorderColor="White">
 
-            
+
             <CollectionView VerticalOptions="Start"
                             HorizontalOptions="Fill"
                             Margin="0"
@@ -149,12 +155,6 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-            
-
-
-
         </Frame>
-        <Button Text="Add list TEMP BUTTON"
-                Command="{Binding AddNewListCommand}"/>
     </VerticalStackLayout>
 </ContentPage>

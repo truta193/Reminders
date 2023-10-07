@@ -93,7 +93,7 @@
                            Grid.Column="2"
                            HorizontalOptions="End"
                            VerticalOptions="Center"
-                           Text="0"
+                           Text="{Binding TodayReminderCount}"
                            TextColor="Black"
                            FontSize="28"
                            FontAttributes="Bold"/>
@@ -106,6 +106,9 @@
                            FontAttributes="Bold"
                            Grid.Row="1"/>
                 </Grid>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToTodayRemindersCommand}"/>
+                </Frame.GestureRecognizers>
             </Frame>
             <!--Scheduled frame-->
             <Frame Grid.Column="1"

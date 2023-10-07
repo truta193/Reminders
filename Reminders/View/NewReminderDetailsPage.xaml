@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Reminders.View.NewReminderDetailsPage"
-             Title="NewReminderDetailsPage"
+             Title="Details"
              BackgroundColor="#F2F2F6"
              xmlns:switch="clr-namespace:IeuanWalker.Maui.Switch;assembly=IeuanWalker.Maui.Switch"
              xmlns:model="clr-namespace:Reminders.Model"
@@ -15,8 +15,6 @@
 
     <ContentPage.Resources>
         <service:StringToColorConverter x:Key="StringToColor" />
-        <Animation x:Key="ScaleAnim"
-                   Name=""/>
     </ContentPage.Resources>
 
 
