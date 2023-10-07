@@ -14,20 +14,34 @@ public partial class MainViewModel : ObservableObject
     private DataStorageService dataStorageService;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TodayReminders))]
+    //This is not really observable when it's elements change (or subelements aka Reminders) so it's a bit of a pain
     public ReminderCollection collection = null;
 
     [ObservableProperty]
     public ReminderGroup todayReminders = null;
-
     [ObservableProperty]
     public int todayReminderCount = 0;
+
+    [ObservableProperty]
+    public ReminderGroup scheduledReminders = null;
+    [ObservableProperty]
+    public int scheduledReminderCount = 0;
+
+    [ObservableProperty]
+    public ReminderGroup allReminders = null;
+    [ObservableProperty]
+    public int allReminderCount = 0;
 
     public MainViewModel(DataStorageService dataStorageService)
     {
         this.dataStorageService = dataStorageService;
         this.Collection = this.dataStorageService.DataRetrieve();
         TodayReminders = new ReminderGroup("Today",  Color.FromArgb("#000000"), 0);
+        ScheduledReminders = new ReminderGroup("Scheduled",  Color.FromArgb("#000000"), 0);
+        AllReminders = new ReminderGroup("All",  Color.FromArgb("#000000"), 0);
         GetTodayReminders();
+        GetScheduledReminders();
+        GetAllReminders();
     }
 
     [RelayCommand]
@@ -137,7 +151,48 @@ public partial class MainViewModel : ObservableObject
         }
 
         TodayReminderCount = TodayReminders.Reminders.Count;
+    }
 
+    public void GetScheduledReminders()
+    {
+        if (ScheduledReminders == null)
+        {
+            return;
+        }
+        ScheduledReminders.Reminders.Clear();
+        foreach (ReminderGroup group in this.Collection.Groups)
+        {
+            foreach (Reminder reminder in group.Reminders)
+            {
+                if (reminder.ScheduledAtDate != DateTime.MinValue.Date && reminder.ScheduledAtDate >= DateTime.Now.Date)
+                {
+                    ScheduledReminders.Add(reminder);
+                    Debug.WriteLine($"Added {reminder.Title}");
+                }
+            }
+        }
+
+        ScheduledReminderCount = ScheduledReminders.Reminders.Count;
+    }
+
+    [RelayCommand]
+    public void GetAllReminders()
+    {
+        if (AllReminders == null)
+        {
+            return;
+        }
+        AllReminders.Reminders.Clear();
+        foreach (ReminderGroup group in this.Collection.Groups)
+        {
+            foreach (Reminder reminder in group.Reminders)
+            {
+                AllReminders.Add(reminder);
+                Debug.WriteLine($"Added {reminder.Title}");
+            }
+        }
+
+        AllReminderCount = AllReminders.Reminders.Count;
     }
 
     [RelayCommand]
@@ -146,6 +201,24 @@ public partial class MainViewModel : ObservableObject
         await Shell.Current.GoToAsync($"{nameof(GroupListPage)}", true,
             new Dictionary<string, object> {
                 { "Group", TodayReminders }
+            });
+    }
+
+    [RelayCommand]
+    async Task GoToScheduledRemindersAsync()
+    {
+        await Shell.Current.GoToAsync($"{nameof(GroupListPage)}", true,
+            new Dictionary<string, object> {
+                { "Group", ScheduledReminders }
+            });
+    }
+
+    [RelayCommand]
+    async Task GoToAllRemindersAsync()
+    {
+        await Shell.Current.GoToAsync($"{nameof(GroupListPage)}", true,
+            new Dictionary<string, object> {
+                { "Group", AllReminders }
             });
     }
 

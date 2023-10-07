@@ -27,7 +27,7 @@
                VerticalOptions="Center"
                HorizontalOptions="Fill"
                HeightRequest="36"
-               Margin="16,0,16,0"
+               Margin="16,16,16,0"
                Padding="4,0,0,0"
                CornerRadius="10"
                BackgroundColor="#E3E3E8"
@@ -141,7 +141,7 @@
                            Grid.Column="2"
                            HorizontalOptions="End"
                            VerticalOptions="Center"
-                           Text="0"
+                           Text="{Binding ScheduledReminderCount}"
                            TextColor="Black"
                            FontSize="28"
                            FontAttributes="Bold"/>
@@ -154,6 +154,9 @@
                            FontAttributes="Bold"
                            Grid.Row="1"/>
                 </Grid>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToScheduledRemindersCommand}"/>
+                </Frame.GestureRecognizers>
             </Frame>
             <!--All frame-->
             <Frame Grid.Column="0"
@@ -164,10 +167,6 @@
                    CornerRadius="12"
                    BackgroundColor="White"
                    BorderColor="White">
-                <Frame.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=CreateDummyDataCommand}"
-                                          CommandParameter="{Binding .}"/>
-                </Frame.GestureRecognizers>
                 <Grid ColumnDefinitions="*,Auto,*"
                       RowDefinitions="*,*"
                       RowSpacing="6"
@@ -191,7 +190,7 @@
                            Grid.Column="2"
                            HorizontalOptions="End"
                            VerticalOptions="Center"
-                           Text="0"
+                           Text="{Binding AllReminderCount}"
                            TextColor="Black"
                            FontSize="28"
                            FontAttributes="Bold"/>
@@ -204,6 +203,9 @@
                            FontAttributes="Bold"
                            Grid.Row="1"/>
                 </Grid>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToAllRemindersCommand}"/>
+                </Frame.GestureRecognizers>
             </Frame>
         </Grid>
         <!--Lists-->

@@ -91,7 +91,12 @@ public partial class NewReminderViewModel : ObservableObject
         this.Nrdvm.SelectedTime = TimeSpan.Zero;
         this.Nrdvm.SelectedDay = null;
 
+        //Yeah this is a bit of a hack, but it works
+        //TODO: Make this better
+        //Make this so that the main page can update things itself, problem is that ReminderGroup etc is not observable
         this.Mvm.GetTodayReminders();
+        this.Mvm.GetScheduledReminders();
+        this.Mvm.GetAllReminders();
         await Shell.Current.GoToAsync("../", true);
         
     }
