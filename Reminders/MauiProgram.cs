@@ -56,6 +56,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<DataStorageService>();
 		builder.Services.AddSingleton<StringToColorConverter>();
         builder.Services.AddSingleton<DateTimeService>();
+		builder.Services.AddSingleton<DataStorageService2>();
 
 
         builder.Services.AddSingleton<MainViewModel>();

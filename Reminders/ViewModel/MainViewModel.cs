@@ -12,6 +12,7 @@ namespace Reminders.ViewModel;
 public partial class MainViewModel : ObservableObject
 {
     private DataStorageService dataStorageService;
+    private DataStorageService2 dataStorageService2;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TodayReminders))]
     //This is not really observable when it's elements change (or subelements aka Reminders) so it's a bit of a pain
@@ -32,9 +33,11 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     public int allReminderCount = 0;
 
-    public MainViewModel(DataStorageService dataStorageService)
+    public MainViewModel(DataStorageService dataStorageService, DataStorageService2 dataStorageService2)
     {
+
         this.dataStorageService = dataStorageService;
+        this.dataStorageService2 = dataStorageService2;
         this.Collection = this.dataStorageService.DataRetrieve();
         TodayReminders = new ReminderGroup("Today",  Color.FromArgb("#000000"), 0);
         ScheduledReminders = new ReminderGroup("Scheduled",  Color.FromArgb("#000000"), 0);
@@ -42,6 +45,7 @@ public partial class MainViewModel : ObservableObject
         GetTodayReminders();
         GetScheduledReminders();
         GetAllReminders();
+        dataStorageService2.Init();
     }
 
     [RelayCommand]
