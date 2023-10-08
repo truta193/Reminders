@@ -47,6 +47,7 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     public async Task AddDummyData()
     {
+
         ReminderModel reminder = new("Dummy Reminder Future", "Dummy Reminder Description", 1);
         reminder.ScheduledAt = DateTime.Now.AddDays(-1);
         reminder.HasDate = true;
