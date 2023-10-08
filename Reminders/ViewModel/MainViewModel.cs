@@ -47,7 +47,9 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     public async Task AddDummyData()
     {
-        ReminderModel reminder = new("Dummy Reminder", "Dummy Reminder Description", 1);
+        ReminderModel reminder = new("Dummy Reminder Future", "Dummy Reminder Description", 1);
+        reminder.ScheduledAt = DateTime.Now.AddDays(-1);
+        reminder.HasDate = true;
         await this.storageService.AddReminder(reminder);
         await RefreshData();
     }
@@ -57,72 +59,10 @@ public partial class MainViewModel : ObservableObject
     {
         this.Lists = new(await this.storageService.GetAllLists());
         this.AllReminders = new(await this.storageService.GetAllReminders());
+        this.TodayReminders = new(await this.storageService.GetTodayReminders());
+        this.ScheduledReminders = new(await this.storageService.GetScheduledReminders());
     } 
 
-    [RelayCommand]
-    public void GetTodayReminders()
-    {
-        /*if (TodayReminders == null)
-        {
-            return;
-        }
-        TodayReminders.Reminders.Clear();
-        foreach (ReminderGroup group in this.Collection.Groups)
-        {
-            foreach (Reminder reminder in group.Reminders)
-            {
-                if (reminder.ScheduledAtDate.Equals(DateTime.Today.Date))
-                {
-                    TodayReminders.Add(reminder);
-                    Debug.WriteLine($"Added {reminder.Title}");
-                }
-            }
-        }
-
-        TodayReminderCount = TodayReminders.Reminders.Count;*/
-    }
-
-    public void GetScheduledReminders()
-    {
-        /*if (ScheduledReminders == null)
-        {
-            return;
-        }
-        ScheduledReminders.Reminders.Clear();
-        foreach (ReminderGroup group in this.Collection.Groups)
-        {
-            foreach (Reminder reminder in group.Reminders)
-            {
-                if (reminder.ScheduledAtDate != DateTime.MinValue.Date && reminder.ScheduledAtDate >= DateTime.Now.Date)
-                {
-                    ScheduledReminders.Add(reminder);
-                    Debug.WriteLine($"Added {reminder.Title}");
-                }
-            }
-        }
-
-        ScheduledReminderCount = ScheduledReminders.Reminders.Count;*/
-    }
-
-    [RelayCommand]
-    public void GetAllReminders()
-    {
-        /*if (AllReminders == null)
-        {
-            return;
-        }
-        AllReminders.Reminders.Clear();
-        foreach (ReminderGroup group in this.Collection.Groups)
-        {
-            foreach (Reminder reminder in group.Reminders)
-            {
-                AllReminders.Add(reminder);
-                Debug.WriteLine($"Added {reminder.Title}");
-            }
-        }
-
-        AllReminderCount = AllReminders.Reminders.Count;*/
-    }
 
     [RelayCommand]
     async Task GoToTodayRemindersAsync()

@@ -93,7 +93,7 @@
                            Grid.Column="2"
                            HorizontalOptions="End"
                            VerticalOptions="Center"
-                           Text="{Binding TodayReminderCount}"
+                           Text="{Binding TodayRemindersCount}"
                            TextColor="Black"
                            FontSize="28"
                            FontAttributes="Bold"/>
@@ -143,7 +143,7 @@
                            Grid.Column="2"
                            HorizontalOptions="End"
                            VerticalOptions="Center"
-                           Text="{Binding ScheduledReminderCount}"
+                           Text="{Binding ScheduledRemindersCount}"
                            TextColor="Black"
                            FontSize="28"
                            FontAttributes="Bold"/>

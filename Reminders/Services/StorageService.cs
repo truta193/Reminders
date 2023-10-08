@@ -61,16 +61,17 @@ public class StorageService
     public async Task<IEnumerable<ReminderModel>> GetTodayReminders()
     {
         await Init();
-        //Query for today reminders
-        return null;
+        var result = await Database.QueryAsync<ReminderModel>("SELECT * FROM Reminders WHERE DATE(STRFTIME('%Y-%m-%d %H:%M:%S', ScheduledAt/10000000 - 62135596800, 'unixepoch')) = DATE(DATETIME('now'));");
+        return result;
     }
 
     //TODO : Implement this method
     public async Task<IEnumerable<ReminderModel>> GetScheduledReminders()
     {
         await Init();
-        //Query for scheduled reminders
-        return null;
+        var result = await Database.QueryAsync<ReminderModel>("SELECT * FROM Reminders WHERE DATE(STRFTIME('%Y-%m-%d %H:%M:%S', ScheduledAt/10000000 - 62135596800, 'unixepoch')) >= DATE(DATETIME('now'));");
+        return result;
+
     }
 
     public async Task RemoveList(int listId)
@@ -98,11 +99,10 @@ public class StorageService
     }
 
     //TODO : Implement this method
-    public async Task RemoveOldReminders()
+    public async Task RemoveOldScheduledReminders()
     {
         await Init();
-        //Update database to remove older reminders
-
+        await Database.QueryAsync<ReminderModel>("DELETE FROM Reminders WHERE HasDate=1 AND DATE(STRFTIME('%Y-%m-%d %H:%M:%S', ScheduledAt/10000000 - 62135596800, 'unixepoch')) < DATE(DATETIME('now'));");
     }
     //Update database to remove older reminders
 
