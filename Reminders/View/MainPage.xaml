@@ -106,9 +106,11 @@
                            FontAttributes="Bold"
                            Grid.Row="1"/>
                 </Grid>
+                
                 <Frame.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding GoToTodayRemindersCommand}"/>
                 </Frame.GestureRecognizers>
+                
             </Frame>
             <!--Scheduled frame-->
             <Frame Grid.Column="1"
@@ -190,7 +192,7 @@
                            Grid.Column="2"
                            HorizontalOptions="End"
                            VerticalOptions="Center"
-                           Text="{Binding AllReminderCount}"
+                           Text="{Binding AllRemindersCount}"
                            TextColor="Black"
                            FontSize="28"
                            FontAttributes="Bold"/>
@@ -203,8 +205,11 @@
                            FontAttributes="Bold"
                            Grid.Row="1"/>
                 </Grid>
+
+                <!--TapGestureRecognizer Command="{Binding GoToAllRemindersCommand}"/-->
+
                 <Frame.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding GoToAllRemindersCommand}"/>
+                    <TapGestureRecognizer Command="{Binding AddDummyDataCommand}"/>
                 </Frame.GestureRecognizers>
             </Frame>
         </Grid>
@@ -218,11 +223,11 @@
         <CollectionView Grid.Row="3"
                         Grid.ColumnSpan="2"
                         Margin="16,-6,16,0"
-                        ItemsSource="{Binding Collection.Groups}"
+                        ItemsSource="{Binding Lists}"
                         ItemsLayout="VerticalList"
                         BackgroundColor="Transparent">
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="model:ReminderGroup">
+                <DataTemplate x:DataType="model:ReminderListModel">
                     <SwipeView >
                         <SwipeView.RightItems>
                             <SwipeItems SwipeBehaviorOnInvoked="Close">
@@ -251,8 +256,8 @@
                                        Padding="0"
                                        HorizontalOptions="Start"
                                        VerticalOptions="Center"
-                                       BackgroundColor="{Binding MainColor, Converter={StaticResource StringToColor}}"
-                                       BorderColor="{Binding MainColor, Converter={StaticResource StringToColor}}">
+                                       BackgroundColor="{Binding HexColor, Converter={StaticResource StringToColor}}"
+                                       BorderColor="{Binding HexColor, Converter={StaticResource StringToColor}}">
                                     <Image Source="icon_list.svg"
                                            WidthRequest="18"
                                            HeightRequest="18"/>
