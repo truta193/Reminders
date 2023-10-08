@@ -1,11 +1,12 @@
-﻿using SQLite;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using SQLite;
 using SQLiteNetExtensions.Attributes;
 
 namespace Reminders.Model;
 
 [Table("Reminders")]
 public class ReminderModel
-{
+{ 
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
     public string Title { get; set; } = String.Empty;

@@ -13,19 +13,19 @@ public partial class MainViewModel : ObservableObject
     private StorageService storageService;
 
     [ObservableProperty]
-    public ObservableCollection<ReminderListModel> lists;
+    public ObservableCollection<ReminderListModel> lists = new();
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TodayRemindersCount))]
-    public ObservableCollection<ReminderModel> todayReminders = null;
+    public ObservableCollection<ReminderModel> todayReminders = new();
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ScheduledRemindersCount))]
-    public ObservableCollection<ReminderModel> scheduledReminders = null;
+    public ObservableCollection<ReminderModel> scheduledReminders = new();
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(AllRemindersCount))]
-    public ObservableCollection<ReminderModel> allReminders = null;
+    public ObservableCollection<ReminderModel> allReminders = new();
 
     public int AllRemindersCount => AllReminders?.Count ?? 0;
     public int TodayRemindersCount => TodayReminders?.Count ?? 0;
@@ -35,22 +35,16 @@ public partial class MainViewModel : ObservableObject
     {
         this.storageService = storageService;
         RefreshData();
-/*      this.Collection = this.dataStorageService.DataRetrieve();
-        TodayReminders = new ReminderGroup("Today",  Color.FromArgb("#000000"), 0);
-        ScheduledReminders = new ReminderGroup("Scheduled",  Color.FromArgb("#000000"), 0);
-        AllReminders = new ReminderGroup("All",  Color.FromArgb("#000000"), 0);*/
-        /*GetTodayReminders();
-        GetScheduledReminders();
-        GetAllReminders();*/
     }
 
     [RelayCommand]
     public async Task AddDummyData()
     {
-
-        ReminderModel reminder = new("Dummy Reminder Future", "Dummy Reminder Description", 1);
-        reminder.ScheduledAt = DateTime.Now.AddDays(-1);
-        reminder.HasDate = true;
+        ReminderModel reminder = new("Dummy Reminder Future", "Dummy Reminder Description", 1)
+        {
+            ScheduledAt = DateTime.Now.AddDays(-1),
+            HasDate = true
+        };
         await this.storageService.AddReminder(reminder);
         await RefreshData();
     }

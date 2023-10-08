@@ -61,16 +61,32 @@ public class StorageService
     public async Task<IEnumerable<ReminderModel>> GetTodayReminders()
     {
         await Init();
-        var result = await Database.QueryAsync<ReminderModel>("SELECT * FROM Reminders WHERE DATE(STRFTIME('%Y-%m-%d %H:%M:%S', ScheduledAt/10000000 - 62135596800, 'unixepoch')) = DATE(DATETIME('now'));");
-        return result;
+        try
+        {
+            var result = await Database.QueryAsync<ReminderModel>("SELECT * FROM Reminders WHERE DATE(STRFTIME('%Y-%m-%d %H:%M:%S', ScheduledAt/10000000 - 62135596800, 'unixepoch')) = DATE(DATETIME('now'))");
+            return result;
+        }
+        catch
+        {
+            return new List<ReminderModel>();
+        }
     }
 
     //TODO : Implement this method
     public async Task<IEnumerable<ReminderModel>> GetScheduledReminders()
     {
         await Init();
-        var result = await Database.QueryAsync<ReminderModel>("SELECT * FROM Reminders WHERE DATE(STRFTIME('%Y-%m-%d %H:%M:%S', ScheduledAt/10000000 - 62135596800, 'unixepoch')) >= DATE(DATETIME('now'));");
-        return result;
+        try
+        {
+            var result = await Database.QueryAsync<ReminderModel>("SELECT * FROM Reminders WHERE DATE(STRFTIME('%Y-%m-%d %H:%M:%S', ScheduledAt/10000000 - 62135596800, 'unixepoch')) >= DATE(DATETIME('now'))");
+            return result;
+        }
+        catch
+        {
+            return new List<ReminderModel>();
+
+        }
+
 
     }
 
@@ -102,7 +118,7 @@ public class StorageService
     public async Task RemoveOldScheduledReminders()
     {
         await Init();
-        await Database.QueryAsync<ReminderModel>("DELETE FROM Reminders WHERE HasDate=1 AND DATE(STRFTIME('%Y-%m-%d %H:%M:%S', ScheduledAt/10000000 - 62135596800, 'unixepoch')) < DATE(DATETIME('now'));");
+        await Database.QueryAsync<ReminderModel>("DELETE FROM Reminders WHERE HasDate=1 AND DATE(STRFTIME('%Y-%m-%d %H:%M:%S', ScheduledAt/10000000 - 62135596800, 'unixepoch')) < DATE(DATETIME('now'))");
     }
     //Update database to remove older reminders
 
