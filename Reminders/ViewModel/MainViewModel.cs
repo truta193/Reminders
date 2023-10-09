@@ -19,7 +19,6 @@ public partial class MainViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(TodayRemindersCount))]
     public ObservableCollection<ReminderModel> todayReminders = new();
 
-
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ScheduledRemindersCount))]
     public ObservableCollection<ReminderModel> scheduledReminders = new();
@@ -53,6 +52,8 @@ public partial class MainViewModel : ObservableObject
 
     public async Task RefreshData()
     {
+        //Clear and a foreach loop crashes, "invalid parameter" exception
+        //This introduces an akward animation when updating the lists but it shouldn't be too noticeable since lists get updated at page transitions
         this.Lists = new(await this.storageService.GetAllLists());
         this.AllReminders = new(await this.storageService.GetAllReminders());
         this.TodayReminders = new(await this.storageService.GetTodayReminders());
