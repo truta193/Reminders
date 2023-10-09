@@ -16,20 +16,20 @@ public partial class MainViewModel : ObservableObject
     public ObservableCollection<ReminderListModel> lists = new();
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(TodayRemindersCount))]
     public ObservableCollection<ReminderModel> todayReminders = new();
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(ScheduledRemindersCount))]
     public ObservableCollection<ReminderModel> scheduledReminders = new();
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(AllRemindersCount))]
     public ObservableCollection<ReminderModel> allReminders = new();
 
-    public int AllRemindersCount => AllReminders?.Count ?? 0;
-    public int TodayRemindersCount => TodayReminders?.Count ?? 0;
-    public int ScheduledRemindersCount => ScheduledReminders?.Count ?? 0;
+    [ObservableProperty]
+    public int allRemindersCount = 0;
+    [ObservableProperty]
+    public int todayRemindersCount =0;
+    [ObservableProperty]
+    public int scheduledRemindersCount =0;
 
     public MainViewModel(StorageService storageService)
     {
@@ -52,10 +52,41 @@ public partial class MainViewModel : ObservableObject
 
     public async Task RefreshData()
     {
-        this.Lists = new(await this.storageService.GetAllLists());
-        this.AllReminders = new(await this.storageService.GetAllReminders());
-        this.TodayReminders = new(await this.storageService.GetTodayReminders());
-        this.ScheduledReminders = new(await this.storageService.GetScheduledReminders());
+        Lists.Clear();
+        List<ReminderListModel> newLists = new(await this.storageService.GetAllLists());
+        foreach (ReminderListModel list in newLists)
+        {
+            Lists.Add(list);
+        }
+
+        AllReminders.Clear();
+        List<ReminderModel> newAllReminders = new( await this.storageService.GetAllReminders());
+        foreach (ReminderModel reminder in newAllReminders)
+        {
+            AllReminders.Add(reminder);
+        }
+
+        AllRemindersCount = AllReminders.Count;
+
+
+        this.TodayReminders.Clear();
+        List<ReminderModel> newTodayReminders = new (await this.storageService.GetTodayReminders());
+        foreach (ReminderModel reminder in newTodayReminders)
+        {
+            this.TodayReminders.Add(reminder);
+        }
+
+        TodayRemindersCount = TodayReminders.Count;
+
+        this.ScheduledReminders.Clear();
+        List<ReminderModel> newSchReminders = new (await this.storageService.GetScheduledReminders());
+        foreach (ReminderModel reminder in newSchReminders)
+        {
+            this.ScheduledReminders.Add(reminder);
+        }
+
+        ScheduledRemindersCount = ScheduledReminders.Count;
+
     } 
 
 
