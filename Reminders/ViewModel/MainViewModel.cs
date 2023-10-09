@@ -19,6 +19,7 @@ public partial class MainViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(TodayRemindersCount))]
     public ObservableCollection<ReminderModel> todayReminders = new();
 
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ScheduledRemindersCount))]
     public ObservableCollection<ReminderModel> scheduledReminders = new();
