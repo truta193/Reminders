@@ -71,4 +71,10 @@
 		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.6" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <MauiXaml Update="View\NewListPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
 </Project>

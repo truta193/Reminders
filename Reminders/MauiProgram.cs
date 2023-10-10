@@ -8,6 +8,7 @@ using Microsoft.Maui.Controls.Compatibility.Platform.Android;
 using Microsoft.Maui.Platform;
 using Reminders.Model;
 using Reminders.Services;
+using Reminders.View;
 using Reminders.ViewModel;
 
 namespace Reminders;
@@ -58,17 +59,17 @@ public static class MauiProgram
 
 
         builder.Services.AddSingleton<MainViewModel>();
-		/*builder.Services.AddTransient<GroupListViewModel>();
+		//builder.Services.AddTransient<GroupListViewModel>();
         builder.Services.AddTransient<NewListViewModel>();
-		builder.Services.AddSingleton<NewReminderViewModel>();
+		/*builder.Services.AddSingleton<NewReminderViewModel>();
 		builder.Services.AddTransient<NewReminderListSelectViewModel>();
 		builder.Services.AddSingleton<NewReminderDetalisViewModel>();*/
 
 
         builder.Services.AddSingleton<MainPage>();
-		/*builder.Services.AddTransient<GroupListPage>();
+		//builder.Services.AddTransient<GroupListPage>();
         builder.Services.AddTransient<NewListPage>();
-		builder.Services.AddTransient<NewReminderPage>();
+		/*builder.Services.AddTransient<NewReminderPage>();
 		builder.Services.AddTransient<NewReminderListSelectPage>();
         builder.Services.AddSingleton<NewReminderDetailsPage>();*/
 

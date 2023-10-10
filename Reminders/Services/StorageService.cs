@@ -89,6 +89,7 @@ public class StorageService
 
     }
 
+    //Not really meant to be used, testing purposes only
     public async Task WipeDatabase()
     {
         await Init();
