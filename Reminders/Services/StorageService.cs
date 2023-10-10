@@ -57,7 +57,6 @@ public class StorageService
         return reminders;
     }
 
-    //TODO : Implement this method
     public async Task<IEnumerable<ReminderModel>> GetTodayReminders()
     {
         await Init();
@@ -88,6 +87,13 @@ public class StorageService
         }
 
 
+    }
+
+    public async Task WipeDatabase()
+    {
+        await Init();
+        await Database.QueryAsync<ReminderListModel>("DROP Table IF EXISTS Lists");
+        await Database.QueryAsync<ReminderModel>("DROP Table IF EXISTS Reminders");
     }
 
     public async Task RemoveList(int listId)

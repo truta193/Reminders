@@ -11,7 +11,7 @@ public class ReminderListModel
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
     public string Title { get; set; } = String.Empty;
-    public string HexColor { get; set; } = String.Empty;
+    public string Color { get; set; } = "#000000";
     public int IconID { get; set; } = 0;
 
     [OneToMany(CascadeOperations = CascadeOperation.All)]
@@ -21,18 +21,37 @@ public class ReminderListModel
 
     public ReminderListModel() { }
 
-    public ReminderListModel(string Title, string HexColor)
+#nullable enable
+    public ReminderListModel(string Title, Color? Color)
     {
+        if (String.IsNullOrEmpty(Title))
+        {
+            Title = "My List";
+        }
+        //Check if color is null
+        if (Color is null)
+        {
+            Color = Colors.Black;
+        }
         this.Title = Title;
-        this.HexColor = HexColor;
+        this.Color = Color.ToArgbHex();
     }
 
-    public ReminderListModel(string Title, string HexColor, int IconID)
+    public ReminderListModel(string Title, Color? Color, int IconID)
     {
+        if (String.IsNullOrEmpty(Title))
+        {
+            Title = "My List";
+        }
+        if (Color is null)
+        {
+            Color = Colors.Black;
+        }
+
         this.Title = Title;
-        this.HexColor = HexColor;
+        this.Color = Color.ToArgbHex();
         this.IconID = IconID;
     }
-
+#nullable disable
 }
 

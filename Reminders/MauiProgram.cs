@@ -53,7 +53,7 @@ public static class MauiProgram
 #endif
 
 		builder.Services.AddSingleton<StorageService>();
-		builder.Services.AddSingleton<StringToColorConverter>();
+		builder.Services.AddSingleton<StringToColorConverterService>();
         builder.Services.AddSingleton<DateTimeService>();
 
 

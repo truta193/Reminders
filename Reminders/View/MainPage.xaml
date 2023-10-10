@@ -12,7 +12,7 @@
              BackgroundColor="#F2F2F6">
 
     <ContentPage.Resources>
-        <service:StringToColorConverter x:Key="StringToColor" />
+        <service:StringToColorConverterService x:Key="StringToColor" />
     </ContentPage.Resources>
     <!--Main grid housing all main components-->
     <Grid RowDefinitions="Auto, Auto, Auto, *, Auto"
@@ -79,9 +79,9 @@
                     <Frame Grid.Column="0" 
                            HorizontalOptions="Start"
                            VerticalOptions="Center"
-                           CornerRadius="50"
                            WidthRequest="32"
                            HeightRequest="32"
+                           CornerRadius="50"
                            BackgroundColor="{StaticResource Blue90}"
                            BorderColor="{StaticResource Blue90}">
                         <Image Source="icon_calendar.svg"
@@ -256,8 +256,8 @@
                                        Padding="0"
                                        HorizontalOptions="Start"
                                        VerticalOptions="Center"
-                                       BackgroundColor="{Binding HexColor, Converter={StaticResource StringToColor}}"
-                                       BorderColor="{Binding HexColor, Converter={StaticResource StringToColor}}">
+                                       BackgroundColor="{Binding Color, Converter={StaticResource StringToColor}}"
+                                       BorderColor="{Binding Color, Converter={StaticResource StringToColor}}">
                                     <Image Source="icon_list.svg"
                                            WidthRequest="18"
                                            HeightRequest="18"/>

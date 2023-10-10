@@ -34,6 +34,7 @@ public partial class MainViewModel : ObservableObject
     public MainViewModel(StorageService storageService)
     {
         this.storageService = storageService;
+        //this.storageService.WipeDatabase();
         RefreshData();
     }
 
@@ -45,7 +46,12 @@ public partial class MainViewModel : ObservableObject
             ScheduledAt = DateTime.Now.AddDays(-1),
             HasDate = true
         };
-        await this.storageService.AddReminder(reminder);
+
+        ReminderListModel list = new("Dummy List", Colors.Blue, 1);
+        await this.storageService.AddList(list);
+        //await this.storageService.WipeDatabase();
+        //await this.storageService.AddList(list);
+        //await this.storageService.AddReminder(reminder);
         await RefreshData();
     }
 

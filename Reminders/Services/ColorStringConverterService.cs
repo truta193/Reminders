@@ -8,12 +8,12 @@ using Microsoft.Maui.Graphics.Converters;
 
 namespace Reminders.Services;
 
-public class StringToColorConverter : IValueConverter
+public class StringToColorConverterService : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         ColorTypeConverter converter = new();
-        Color color = (Color)(converter.ConvertFromInvariantString((string)value));
+        Color color = (Color) converter.ConvertFromInvariantString((string)value);
         return color;
     }
 
