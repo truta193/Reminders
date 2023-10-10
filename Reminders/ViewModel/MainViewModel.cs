@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Reminders.Model;
 using Reminders.Services;
+using Reminders.View;
 
 namespace Reminders.ViewModel;
 
@@ -47,11 +48,13 @@ public partial class MainViewModel : ObservableObject
             HasDate = true
         };
 
-        ReminderListModel list = new("Dummy List", Colors.Blue, 1);
-        await this.storageService.AddList(list);
+        ReminderListModel list = new("Dummy List 2", Colors.Blue, 1);
+        //await this.storageService.AddList(list);
+        //await this.storageService.AddList(list);
         //await this.storageService.WipeDatabase();
         //await this.storageService.AddList(list);
         //await this.storageService.AddReminder(reminder);
+        Debug.WriteLine(await this.storageService.GetListDuplicateCount("Dummy List"));
         await RefreshData();
     }
 
@@ -110,7 +113,7 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     async Task GoToNewListAsync()
     {
-        //await Shell.Current.GoToAsync($"{nameof(NewListPage)}", true);
+        await Shell.Current.GoToAsync($"{nameof(NewListPage)}", true);
     }
 
     [RelayCommand]

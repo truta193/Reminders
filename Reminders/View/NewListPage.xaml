@@ -1,12 +1,148 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:Reminders.Model"
+             xmlns:viewmodel="clr-namespace:Reminders.ViewModel"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              x:Class="Reminders.View.NewListPage"
-             Title="NewListPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+             x:DataType="viewmodel:NewListViewModel"
+             ios:Page.UseSafeArea="True"
+             Title="Add List"
+             BackgroundColor="#F2F2F6">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Add item"
+                     IconImageSource="icon_plus.svg"
+                     Command="{Binding AddNewListCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <ControlTemplate x:Key="ColorRadio">
+                <Border Stroke="Transparent"
+                        WidthRequest="54"
+                        HeightRequest="54"
+                        StrokeThickness="2"
+                        StrokeShape="RoundRectangle 54,54,54,54"
+                        BackgroundColor="White">
+
+                    <Ellipse WidthRequest="40"
+                             HeightRequest="40"
+                             Fill="{Binding Source={RelativeSource TemplatedParent}, Path=BackgroundColor}"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center"/>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CheckedStates">
+                                <VisualState x:Name="Checked">
+                                    <VisualState.Setters>
+                                        <Setter Property="Stroke" Value="{StaticResource Gray50}" />
+
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked">
+                                    <VisualState.Setters>
+                                        <Setter Property="Stroke" Value="Transparent" />
+
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+                </Border>
+            </ControlTemplate>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <VerticalStackLayout Margin="16,16,16,16"
+                         Spacing="15">
+        <Frame Padding="16,16,16,0"
+               HeightRequest="200"
+               CornerRadius="12"
+               BackgroundColor="White"
+               BorderColor="White">
+            <VerticalStackLayout>
+                <Border VerticalOptions="Start"
+                        HorizontalOptions="Center"
+                        HeightRequest="96"
+                        WidthRequest="96"
+                        StrokeShape="Ellipse 50"
+                        Stroke="Transparent">
+                    <Border.Shadow>
+                        <Shadow Radius="20"
+                                Brush="{Binding Color}"
+                                Opacity="0.4"
+                                Offset="0,0"/>
+                    </Border.Shadow>
+                    <Frame VerticalOptions="Start"
+                           HorizontalOptions="Center"
+                           HeightRequest="96"
+                           WidthRequest="96"
+                           BackgroundColor="{Binding Color}"
+                           BorderColor="{Binding Color}"
+                           CornerRadius="50"
+                           HasShadow="True">
+                        <Image Source="icon_list.svg"
+                               WidthRequest="56"
+                               HeightRequest="56"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"/>
+                    </Frame>
+                </Border>
+                <Frame VerticalOptions="End"
+                       CornerRadius="12"
+                       BackgroundColor="{StaticResource Gray30}"
+                       BorderColor="{StaticResource Gray30}"
+                       HeightRequest="56"
+                       Padding="0"
+                       Margin="0,16,0,0">
+
+                    <Entry HorizontalOptions="Center"
+                           HeightRequest="56"
+                           BackgroundColor="Transparent"
+                           ClearButtonVisibility="Never"
+                           Placeholder="List Name"
+                           FontSize="22"
+                           PlaceholderColor="{StaticResource Gray60}"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center"
+                           Keyboard="Text"
+                           Text="{Binding Name, Mode=TwoWay}"
+                           TextColor="Black">
+
+                    </Entry>
+                </Frame>
+
+            </VerticalStackLayout>
+        </Frame>
+        <Frame Padding="10,10,10,10"
+               CornerRadius="12"
+               BackgroundColor="White"
+               BorderColor="White">
+            <CollectionView VerticalOptions="Start"
+                            HorizontalOptions="Fill"
+                            Margin="0"
+                            RadioButtonGroup.GroupName="colorss"
+                            ItemsSource="{Binding RadioButtons}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="6"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:RadioColorButtonModel">
+                        <RadioButton ControlTemplate="{StaticResource ColorRadio}"
+                             GroupName="colorss"
+                             IsChecked="{Binding IsChecked}"
+                             BackgroundColor="{Binding Color}">
+                            <RadioButton.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:NewListViewModel}}, Path=UpdateListColorCommand}"
+                                              CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type RadioButton}}}" />
+                            </RadioButton.GestureRecognizers>
+                        </RadioButton>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Frame>
     </VerticalStackLayout>
 </ContentPage>

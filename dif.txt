@@ -1,0 +1,175 @@
+commit 8b9d2841b4f83c5cbbbface101a10f43d189fa47
+Author: truta193 <trutaandrei7033@gmail.com>
+Date:   Sat Oct 7 15:41:41 2023 +0300
+
+    Implemented month/year selector visibility, widget is still ugly
+
+diff --git a/Reminders/View/NewReminderDetailsPage.xaml b/Reminders/View/NewReminderDetailsPage.xaml
+index 84535c9..786877d 100644
+--- a/Reminders/View/NewReminderDetailsPage.xaml
++++ b/Reminders/View/NewReminderDetailsPage.xaml
+@@ -96,50 +96,7 @@
+                            Grid.ColumnSpan="3"
+                            Margin="0,0,12,0"/>
+                 </Grid>
+-                <HorizontalStackLayout>
+-                    <!--Picker for month-->
+-
+-                    <Picker x:Name="MonthPicker"
+-                                Title="Month"
+-                                ItemsSource="{Binding Months}"
+-                                SelectedItem="{Binding selectedMonthString}"
+-                                ItemDisplayBinding="{Binding .}"
+-                                HorizontalOptions="Fill"
+-                                VerticalOptions="Center"
+-                                Margin="0"
+-                                FontSize="17"
+-                                TextColor="Black"
+-                                BackgroundColor="Transparent"
+-                                TitleColor="Black"
+-                                FontAttributes="Bold">
+-                        <Picker.Behaviors>
+-                            <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
+-                                                            Command="{Binding UpdateCalendarMonthFromPickerCommand}"
+-                                                            CommandParameter="{Binding Source={x:Reference MonthPicker}, Path=SelectedItem}"/>
+-                        </Picker.Behaviors>
+-                    </Picker>
+-                    <!--Picker for year-->
+-                    <Picker x:Name="YearPicker"
+-                                Title="Year"
+-                                ItemsSource="{Binding Years}"
+-                                SelectedItem="{Binding SelectedYear}"
+-                                ItemDisplayBinding="{Binding .}"
+-                                HorizontalOptions="Fill"
+-                                VerticalOptions="Center"
+-                                Margin="0"
+-                                FontSize="17"
+-                                TextColor="Black"
+-                                BackgroundColor="Transparent"
+-                                TitleColor="Black"
+-                                FontAttributes="Bold">
+-                        <Picker.Behaviors>
+-                            <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
+-                                                            Command="{Binding UpdateCalendarYearFromPickerCommand}"
+-                                                            CommandParameter="{Binding Source={x:Reference YearPicker}, Path=SelectedItem}"/>
+-                        </Picker.Behaviors>
+-                    </Picker>
+-
+-                </HorizontalStackLayout>
++                
+                 <!--Calendar-->
+                 <Frame Margin="12,0,12,0"
+                        Padding="0"
+@@ -172,14 +129,18 @@
+                                 <VerticalStackLayout VerticalOptions="Center"
+                                              HorizontalOptions="Center">
+                                     <Image Source="icon_arrow_right.svg"
+-                                       HeightRequest="20"
+-                                       VerticalOptions="Center"
+-                                       HorizontalOptions="Start">
++                                           HeightRequest="20"
++                                           VerticalOptions="Center"
++                                           HorizontalOptions="Start"
++                                           Rotation="{Binding myRotation}">
+                                         <Image.Behaviors>
+                                             <toolkit:IconTintColorBehavior TintColor="{StaticResource Blue90}"/>
+                                         </Image.Behaviors>
+                                     </Image>
+                                 </VerticalStackLayout>
++                                <Frame.GestureRecognizers>
++                                    <TapGestureRecognizer Command="{Binding UpdateMYSelectorVisibilityCommand}"/>
++                                </Frame.GestureRecognizers>
+                             </Frame>
+                             <Frame Padding="0"
+                                    Margin="0"
+@@ -230,6 +191,52 @@
+                             </Frame>
+                         </Grid>
+ 
++                        <HorizontalStackLayout IsVisible="{Binding IsMYSelectorVisible}"
++                                               Margin="12,0,12,0">
++                            <!--Picker for month-->
++
++                            <Picker x:Name="MonthPicker"
++                                Title="Month"
++                                ItemsSource="{Binding Months}"
++                                SelectedItem="{Binding selectedMonthString}"
++                                ItemDisplayBinding="{Binding .}"
++                                HorizontalOptions="Fill"
++                                VerticalOptions="Center"
++                                Margin="0"
++                                FontSize="17"
++                                TextColor="Black"
++                                BackgroundColor="Transparent"
++                                TitleColor="Black"
++                                FontAttributes="Bold">
++                                <Picker.Behaviors>
++                                    <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
++                                                            Command="{Binding UpdateCalendarMonthFromPickerCommand}"
++                                                            CommandParameter="{Binding Source={x:Reference MonthPicker}, Path=SelectedItem}"/>
++                                </Picker.Behaviors>
++                            </Picker>
++                            <!--Picker for year-->
++                            <Picker x:Name="YearPicker"
++                                Title="Year"
++                                ItemsSource="{Binding Years}"
++                                SelectedItem="{Binding SelectedYear}"
++                                ItemDisplayBinding="{Binding .}"
++                                HorizontalOptions="Fill"
++                                VerticalOptions="Center"
++                                Margin="0"
++                                FontSize="17"
++                                TextColor="Black"
++                                BackgroundColor="Transparent"
++                                TitleColor="Black"
++                                FontAttributes="Bold">
++                                <Picker.Behaviors>
++                                    <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
++                                                            Command="{Binding UpdateCalendarYearFromPickerCommand}"
++                                                            CommandParameter="{Binding Source={x:Reference YearPicker}, Path=SelectedItem}"/>
++                                </Picker.Behaviors>
++                            </Picker>
++
++                        </HorizontalStackLayout>
++
+                         <!--Day names-->
+                         <CollectionView Margin="0,12,0,12"
+                                         VerticalOptions="Start"
+diff --git a/Reminders/ViewModel/NewReminderDetalisViewModel.cs b/Reminders/ViewModel/NewReminderDetalisViewModel.cs
+index f173943..d23f078 100644
+--- a/Reminders/ViewModel/NewReminderDetalisViewModel.cs
++++ b/Reminders/ViewModel/NewReminderDetalisViewModel.cs
+@@ -68,6 +68,14 @@ public partial class NewReminderDetalisViewModel : ObservableObject
+     [ObservableProperty]
+     ObservableCollection<string> minutes = new();
+ 
++    [ObservableProperty]
++    [NotifyPropertyChangedFor(nameof(myRotation))]
++    bool isMYSelectorVisible = false;
++
++    
++    public int myRotation => IsMYSelectorVisible ? 90 : 0;
++
++
+     [ObservableProperty]
+     [NotifyPropertyChangedFor(nameof(ScheduledDate))]
+     bool dateToggle = false;
+@@ -150,6 +158,7 @@ public partial class NewReminderDetalisViewModel : ObservableObject
+ 
+     public void GenerateCalendarView(int year, int month)
+     {
++
+         if (Days != null)
+         {
+             Days.Clear();
+@@ -234,4 +243,10 @@ public partial class NewReminderDetalisViewModel : ObservableObject
+         SelectedYear = year;
+     }
+ 
++    [RelayCommand]
++    public void UpdateMYSelectorVisibility()
++    {
++        IsMYSelectorVisible = !IsMYSelectorVisible;
++    }
++
+ }

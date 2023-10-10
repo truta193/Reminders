@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,33 +61,31 @@ public class StorageService
     public async Task<IEnumerable<ReminderModel>> GetTodayReminders()
     {
         await Init();
-        try
-        {
-            var result = await Database.QueryAsync<ReminderModel>("SELECT * FROM Reminders WHERE DATE(STRFTIME('%Y-%m-%d %H:%M:%S', ScheduledAt/10000000 - 62135596800, 'unixepoch')) = DATE(DATETIME('now'))");
-            return result;
-        }
-        catch
-        {
-            return new List<ReminderModel>();
-        }
+        var result = await Database.QueryAsync<ReminderModel>("SELECT * FROM Reminders WHERE DATE(STRFTIME('%Y-%m-%d %H:%M:%S', ScheduledAt/10000000 - 62135596800, 'unixepoch')) = DATE(DATETIME('now'))");
+        return result;
+           
     }
 
     //TODO : Implement this method
     public async Task<IEnumerable<ReminderModel>> GetScheduledReminders()
     {
         await Init();
-        try
-        {
-            var result = await Database.QueryAsync<ReminderModel>("SELECT * FROM Reminders WHERE DATE(STRFTIME('%Y-%m-%d %H:%M:%S', ScheduledAt/10000000 - 62135596800, 'unixepoch')) >= DATE(DATETIME('now'))");
-            return result;
-        }
-        catch
-        {
-            return new List<ReminderModel>();
+        var result = await Database.QueryAsync<ReminderModel>("SELECT * FROM Reminders WHERE DATE(STRFTIME('%Y-%m-%d %H:%M:%S', ScheduledAt/10000000 - 62135596800, 'unixepoch')) >= DATE(DATETIME('now'))");
+        return result;
+    }
 
-        }
+    public async Task<int> GetListDuplicateCount(string Title)
+    {
+        await Init();
+        var result = await Database.Table<ReminderListModel>().Where(x => x.Title == Title).ToListAsync();
+        return result.Count;
+    }
 
-
+    public async Task<int> GetListOrderedDuplicateCount(string Title)
+    {         
+        await Init();
+        var result = await Database.Table<ReminderListModel>().Where(x => x.Title.StartsWith(Title)).ToListAsync();
+        return result.Count;
     }
 
     //Not really meant to be used, testing purposes only

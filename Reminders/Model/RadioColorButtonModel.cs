@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Reminders.Model;
 
-public class RadioColorButton
+public class RadioColorButtonModel
 {
     public Color Color { get; set; }
     public bool IsChecked { get; set; }
