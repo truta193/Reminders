@@ -245,7 +245,7 @@
                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=GoToGroupListCommand}"
                                                           CommandParameter="{Binding .}"/>
                             </Frame.GestureRecognizers>
-                            <Grid ColumnDefinitions="44,*,Auto,*,Auto"
+                            <Grid ColumnDefinitions="44,*,Auto,Auto,Auto"
                                   RowDefinitions="*"
                                   VerticalOptions="Center"
                                   Margin="5,0,5,0">
@@ -267,7 +267,9 @@
                                        TextColor="Black"
                                        FontSize="17"
                                        HorizontalOptions="Start"
-                                       VerticalOptions="Center"/>
+                                       VerticalOptions="Center"
+                                       Margin="0,0,15,0"
+                                       LineBreakMode="TailTruncation"/>
                                 <Label Grid.Column="3"
                                        HorizontalOptions="End"
                                        VerticalOptions="Center"

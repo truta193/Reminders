@@ -98,8 +98,11 @@
                        HeightRequest="56"
                        Padding="0"
                        Margin="0,16,0,0">
-
-                    <Entry HorizontalOptions="Center"
+                    <VerticalStackLayout Padding="0"
+                                         Margin="12,0,12,0">
+                        <Entry HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Margin="0"
                            HeightRequest="56"
                            BackgroundColor="Transparent"
                            ClearButtonVisibility="Never"
@@ -110,9 +113,8 @@
                            VerticalTextAlignment="Center"
                            Keyboard="Text"
                            Text="{Binding Name, Mode=TwoWay}"
-                           TextColor="Black">
-
-                    </Entry>
+                           TextColor="Black"/>
+                    </VerticalStackLayout>
                 </Frame>
 
             </VerticalStackLayout>

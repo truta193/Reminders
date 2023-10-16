@@ -31,7 +31,8 @@ public partial class NewListViewModel : ObservableObject
         Color.FromArgb("#5DC466"),
         Color.FromArgb("#0C79FE"),
         Color.FromArgb("#B67AD5"),
-        Color.FromArgb("#998667")
+        Color.FromArgb("#998667"),
+        Color.FromArgb("#FFFF22")
     };
 
     public ObservableCollection<RadioColorButtonModel> RadioButtons { get; set; } = new();
