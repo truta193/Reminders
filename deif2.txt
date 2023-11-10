@@ -1,0 +1,30 @@
+:100644 100644 d963d0f cb91e5b M	Reminders/AppShell.xaml.cs
+:100644 100644 b364ab1 1e2c719 M	Reminders/MauiProgram.cs
+:100644 100644 694c06c 42ae0a4 R086	Reminders/Model/RadioColorButtonModel.cs	Reminders/Model/RadioColorButton.cs
+:000000 100644 0000000 cae8d7f A	Reminders/Model/Reminder.cs
+:000000 100644 0000000 911a9be A	Reminders/Model/ReminderCollection.cs
+:000000 100644 0000000 a145870 A	Reminders/Model/ReminderGroup.cs
+:100644 000000 e8ae02e 0000000 D	Reminders/Model/ReminderListModel.cs
+:100644 000000 cb9db0f 0000000 D	Reminders/Model/ReminderModel.cs
+:100644 100644 e8d160c b288a4d M	Reminders/Reminders.csproj
+:100644 100644 979fffb 9da14b5 R078	Reminders/Services/ColorStringConverterService.cs	Reminders/Services/ColorStringConverter.cs
+:000000 100644 0000000 2150527 A	Reminders/Services/DataStorageService.cs
+:100644 000000 6ca5c0a 0000000 D	Reminders/Services/StorageService.cs
+:000000 100644 0000000 3ac5c26 A	Reminders/View/GroupListPage.xaml
+:000000 100644 0000000 cb6a9f8 A	Reminders/View/GroupListPage.xaml.cs
+:100644 100644 1553fa7 bc7ebdc M	Reminders/View/MainPage.xaml
+:100644 100644 4982a1a 2ed2763 M	Reminders/View/NewListPage.xaml
+:100644 100644 9dfd3f5 c5af5b7 M	Reminders/View/NewListPage.xaml.cs
+:000000 100644 0000000 62b98af A	Reminders/View/NewReminderDetailsPage.xaml
+:000000 100644 0000000 196d5dc A	Reminders/View/NewReminderDetailsPage.xaml.cs
+:000000 100644 0000000 bc3d9de A	Reminders/View/NewReminderListSelectPage.xaml
+:000000 100644 0000000 0034e25 A	Reminders/View/NewReminderListSelectPage.xaml.cs
+:000000 100644 0000000 f01dd8a A	Reminders/View/NewReminderPage.xaml
+:000000 100644 0000000 3cbef74 A	Reminders/View/NewReminderPage.xaml.cs
+:000000 100644 0000000 3956e01 A	Reminders/ViewModel/GroupListViewModel.cs
+:100644 100644 e7bd63f f1a1b31 M	Reminders/ViewModel/MainViewModel.cs
+:100644 100644 cdfad02 9b328b3 M	Reminders/ViewModel/NewListViewModel.cs
+:000000 100644 0000000 d23f078 A	Reminders/ViewModel/NewReminderDetalisViewModel.cs
+:000000 100644 0000000 85ccf4a A	Reminders/ViewModel/NewReminderListSelectViewModel.cs
+:000000 100644 0000000 35f7553 A	Reminders/ViewModel/NewReminderViewModel.cs
+:100644 000000 e483b19 0000000 D	dif.txt

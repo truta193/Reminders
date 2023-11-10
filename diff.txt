@@ -1,0 +1,853 @@
+diff --git a/Reminders/AppShell.xaml.cs b/Reminders/AppShell.xaml.cs
+index d963d0f..a2769af 100644
+--- a/Reminders/AppShell.xaml.cs
++++ b/Reminders/AppShell.xaml.cs
+@@ -1,18 +1,16 @@
+ ﻿
+ 
+-using Reminders.View;
+-
+ namespace Reminders;
+ 
+ public partial class AppShell : Shell
+ {
+-
+ 	public AppShell()
+ 	{
+ 		InitializeComponent();
++
+         //Routing.RegisterRoute(nameof(GroupListPage), typeof(GroupListPage));
+-        Routing.RegisterRoute(nameof(NewListPage), typeof(NewListPage));
+-		/*Routing.RegisterRoute(nameof(NewReminderPage), typeof(NewReminderPage));
++  /*      Routing.RegisterRoute(nameof(NewListPage), typeof(NewListPage));
++		Routing.RegisterRoute(nameof(NewReminderPage), typeof(NewReminderPage));
+ 		Routing.RegisterRoute(nameof(NewReminderListSelectPage), typeof(NewReminderListSelectPage));
+ 		Routing.RegisterRoute(nameof(NewReminderDetailsPage), typeof(NewReminderDetailsPage));*/
+     }
+diff --git a/Reminders/MauiProgram.cs b/Reminders/MauiProgram.cs
+index b364ab1..71528a3 100644
+--- a/Reminders/MauiProgram.cs
++++ b/Reminders/MauiProgram.cs
+@@ -8,7 +8,6 @@ using Microsoft.Maui.Controls.Compatibility.Platform.Android;
+ using Microsoft.Maui.Platform;
+ using Reminders.Model;
+ using Reminders.Services;
+-using Reminders.View;
+ using Reminders.ViewModel;
+ 
+ namespace Reminders;
+@@ -54,22 +53,22 @@ public static class MauiProgram
+ #endif
+ 
+ 		builder.Services.AddSingleton<StorageService>();
+-		builder.Services.AddSingleton<StringToColorConverterService>();
++		builder.Services.AddSingleton<StringToColorConverter>();
+         builder.Services.AddSingleton<DateTimeService>();
+ 
+ 
+         builder.Services.AddSingleton<MainViewModel>();
+-		//builder.Services.AddTransient<GroupListViewModel>();
++		/*builder.Services.AddTransient<GroupListViewModel>();
+         builder.Services.AddTransient<NewListViewModel>();
+-		/*builder.Services.AddSingleton<NewReminderViewModel>();
++		builder.Services.AddSingleton<NewReminderViewModel>();
+ 		builder.Services.AddTransient<NewReminderListSelectViewModel>();
+ 		builder.Services.AddSingleton<NewReminderDetalisViewModel>();*/
+ 
+ 
+         builder.Services.AddSingleton<MainPage>();
+-		//builder.Services.AddTransient<GroupListPage>();
++		/*builder.Services.AddTransient<GroupListPage>();
+         builder.Services.AddTransient<NewListPage>();
+-		/*builder.Services.AddTransient<NewReminderPage>();
++		builder.Services.AddTransient<NewReminderPage>();
+ 		builder.Services.AddTransient<NewReminderListSelectPage>();
+         builder.Services.AddSingleton<NewReminderDetailsPage>();*/
+ 
+diff --git a/Reminders/Model/RadioColorButtonModel.cs b/Reminders/Model/RadioColorButton.cs
+similarity index 86%
+rename from Reminders/Model/RadioColorButtonModel.cs
+rename to Reminders/Model/RadioColorButton.cs
+index 694c06c..42ae0a4 100644
+--- a/Reminders/Model/RadioColorButtonModel.cs
++++ b/Reminders/Model/RadioColorButton.cs
+@@ -6,7 +6,7 @@ using System.Threading.Tasks;
+ 
+ namespace Reminders.Model;
+ 
+-public class RadioColorButtonModel
++public class RadioColorButton
+ {
+     public Color Color { get; set; }
+     public bool IsChecked { get; set; }
+diff --git a/Reminders/Model/ReminderListModel.cs b/Reminders/Model/ReminderListModel.cs
+index e8ae02e..fa5ba63 100644
+--- a/Reminders/Model/ReminderListModel.cs
++++ b/Reminders/Model/ReminderListModel.cs
+@@ -1,5 +1,4 @@
+ ﻿using System.Collections.ObjectModel;
+-using CommunityToolkit.Mvvm.ComponentModel;
+ using SQLite;
+ using SQLiteNetExtensions.Attributes;
+ 
+@@ -11,7 +10,7 @@ public class ReminderListModel
+     [PrimaryKey, AutoIncrement]
+     public int Id { get; set; }
+     public string Title { get; set; } = String.Empty;
+-    public string Color { get; set; } = "#000000";
++    public string HexColor { get; set; } = String.Empty;
+     public int IconID { get; set; } = 0;
+ 
+     [OneToMany(CascadeOperations = CascadeOperation.All)]
+@@ -21,37 +20,18 @@ public class ReminderListModel
+ 
+     public ReminderListModel() { }
+ 
+-#nullable enable
+-    public ReminderListModel(string Title, Color? Color)
++    public ReminderListModel(string Title, string HexColor)
+     {
+-        if (String.IsNullOrEmpty(Title))
+-        {
+-            Title = "My List";
+-        }
+-        //Check if color is null
+-        if (Color is null)
+-        {
+-            Color = Colors.Black;
+-        }
+         this.Title = Title;
+-        this.Color = Color.ToArgbHex();
++        this.HexColor = HexColor;
+     }
+ 
+-    public ReminderListModel(string Title, Color? Color, int IconID)
++    public ReminderListModel(string Title, string HexColor, int IconID)
+     {
+-        if (String.IsNullOrEmpty(Title))
+-        {
+-            Title = "My List";
+-        }
+-        if (Color is null)
+-        {
+-            Color = Colors.Black;
+-        }
+-
+         this.Title = Title;
+-        this.Color = Color.ToArgbHex();
++        this.HexColor = HexColor;
+         this.IconID = IconID;
+     }
+-#nullable disable
++
+ }
+ 
+diff --git a/Reminders/Model/ReminderModel.cs b/Reminders/Model/ReminderModel.cs
+index cb9db0f..362c4a6 100644
+--- a/Reminders/Model/ReminderModel.cs
++++ b/Reminders/Model/ReminderModel.cs
+@@ -1,12 +1,11 @@
+-﻿using CommunityToolkit.Mvvm.ComponentModel;
+-using SQLite;
++﻿using SQLite;
+ using SQLiteNetExtensions.Attributes;
+ 
+ namespace Reminders.Model;
+ 
+ [Table("Reminders")]
+ public class ReminderModel
+-{ 
++{
+     [PrimaryKey, AutoIncrement]
+     public int Id { get; set; }
+     public string Title { get; set; } = String.Empty;
+diff --git a/Reminders/Reminders.csproj b/Reminders/Reminders.csproj
+index e8d160c..96240c8 100644
+--- a/Reminders/Reminders.csproj
++++ b/Reminders/Reminders.csproj
+@@ -71,10 +71,4 @@
+ 		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.6" />
+ 	</ItemGroup>
+ 
+-	<ItemGroup>
+-	  <MauiXaml Update="View\NewListPage.xaml">
+-	    <Generator>MSBuild:Compile</Generator>
+-	  </MauiXaml>
+-	</ItemGroup>
+-
+ </Project>
+diff --git a/Reminders/Services/ColorStringConverterService.cs b/Reminders/Services/ColorStringConverter.cs
+similarity index 78%
+rename from Reminders/Services/ColorStringConverterService.cs
+rename to Reminders/Services/ColorStringConverter.cs
+index 979fffb..9da14b5 100644
+--- a/Reminders/Services/ColorStringConverterService.cs
++++ b/Reminders/Services/ColorStringConverter.cs
+@@ -8,12 +8,12 @@ using Microsoft.Maui.Graphics.Converters;
+ 
+ namespace Reminders.Services;
+ 
+-public class StringToColorConverterService : IValueConverter
++public class StringToColorConverter : IValueConverter
+ {
+     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+     {
+         ColorTypeConverter converter = new();
+-        Color color = (Color) converter.ConvertFromInvariantString((string)value);
++        Color color = (Color)(converter.ConvertFromInvariantString((string)value));
+         return color;
+     }
+ 
+diff --git a/Reminders/Services/StorageService.cs b/Reminders/Services/StorageService.cs
+index 6ca5c0a..5bd103c 100644
+--- a/Reminders/Services/StorageService.cs
++++ b/Reminders/Services/StorageService.cs
+@@ -1,6 +1,5 @@
+ ﻿using System;
+ using System.Collections.Generic;
+-using System.Diagnostics;
+ using System.Linq;
+ using System.Text;
+ using System.Threading.Tasks;
+@@ -58,42 +57,21 @@ public class StorageService
+         return reminders;
+     }
+ 
++    //TODO : Implement this method
+     public async Task<IEnumerable<ReminderModel>> GetTodayReminders()
+     {
+         await Init();
+-        var result = await Database.QueryAsync<ReminderModel>("SELECT * FROM Reminders WHERE DATE(STRFTIME('%Y-%m-%d %H:%M:%S', ScheduledAt/10000000 - 62135596800, 'unixepoch')) = DATE(DATETIME('now'))");
++        var result = await Database.QueryAsync<ReminderModel>("SELECT * FROM Reminders WHERE DATE(STRFTIME('%Y-%m-%d %H:%M:%S', ScheduledAt/10000000 - 62135596800, 'unixepoch')) = DATE(DATETIME('now'));");
+         return result;
+-           
+     }
+ 
+     //TODO : Implement this method
+     public async Task<IEnumerable<ReminderModel>> GetScheduledReminders()
+     {
+         await Init();
+-        var result = await Database.QueryAsync<ReminderModel>("SELECT * FROM Reminders WHERE DATE(STRFTIME('%Y-%m-%d %H:%M:%S', ScheduledAt/10000000 - 62135596800, 'unixepoch')) >= DATE(DATETIME('now'))");
++        var result = await Database.QueryAsync<ReminderModel>("SELECT * FROM Reminders WHERE DATE(STRFTIME('%Y-%m-%d %H:%M:%S', ScheduledAt/10000000 - 62135596800, 'unixepoch')) >= DATE(DATETIME('now'));");
+         return result;
+-    }
+-
+-    public async Task<int> GetListDuplicateCount(string Title)
+-    {
+-        await Init();
+-        var result = await Database.Table<ReminderListModel>().Where(x => x.Title == Title).ToListAsync();
+-        return result.Count;
+-    }
+ 
+-    public async Task<int> GetListOrderedDuplicateCount(string Title)
+-    {         
+-        await Init();
+-        var result = await Database.Table<ReminderListModel>().Where(x => x.Title.StartsWith(Title)).ToListAsync();
+-        return result.Count;
+-    }
+-
+-    //Not really meant to be used, testing purposes only
+-    public async Task WipeDatabase()
+-    {
+-        await Init();
+-        await Database.QueryAsync<ReminderListModel>("DROP Table IF EXISTS Lists");
+-        await Database.QueryAsync<ReminderModel>("DROP Table IF EXISTS Reminders");
+     }
+ 
+     public async Task RemoveList(int listId)
+@@ -124,7 +102,7 @@ public class StorageService
+     public async Task RemoveOldScheduledReminders()
+     {
+         await Init();
+-        await Database.QueryAsync<ReminderModel>("DELETE FROM Reminders WHERE HasDate=1 AND DATE(STRFTIME('%Y-%m-%d %H:%M:%S', ScheduledAt/10000000 - 62135596800, 'unixepoch')) < DATE(DATETIME('now'))");
++        await Database.QueryAsync<ReminderModel>("DELETE FROM Reminders WHERE HasDate=1 AND DATE(STRFTIME('%Y-%m-%d %H:%M:%S', ScheduledAt/10000000 - 62135596800, 'unixepoch')) < DATE(DATETIME('now'));");
+     }
+     //Update database to remove older reminders
+ 
+diff --git a/Reminders/View/MainPage.xaml b/Reminders/View/MainPage.xaml
+index 1553fa7..4cd90d3 100644
+--- a/Reminders/View/MainPage.xaml
++++ b/Reminders/View/MainPage.xaml
+@@ -12,7 +12,7 @@
+              BackgroundColor="#F2F2F6">
+ 
+     <ContentPage.Resources>
+-        <service:StringToColorConverterService x:Key="StringToColor" />
++        <service:StringToColorConverter x:Key="StringToColor" />
+     </ContentPage.Resources>
+     <!--Main grid housing all main components-->
+     <Grid RowDefinitions="Auto, Auto, Auto, *, Auto"
+@@ -79,9 +79,9 @@
+                     <Frame Grid.Column="0" 
+                            HorizontalOptions="Start"
+                            VerticalOptions="Center"
++                           CornerRadius="50"
+                            WidthRequest="32"
+                            HeightRequest="32"
+-                           CornerRadius="50"
+                            BackgroundColor="{StaticResource Blue90}"
+                            BorderColor="{StaticResource Blue90}">
+                         <Image Source="icon_calendar.svg"
+@@ -245,7 +245,7 @@
+                                 <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainViewModel}}, Path=GoToGroupListCommand}"
+                                                           CommandParameter="{Binding .}"/>
+                             </Frame.GestureRecognizers>
+-                            <Grid ColumnDefinitions="44,*,Auto,Auto,Auto"
++                            <Grid ColumnDefinitions="44,*,Auto,*,Auto"
+                                   RowDefinitions="*"
+                                   VerticalOptions="Center"
+                                   Margin="5,0,5,0">
+@@ -256,8 +256,8 @@
+                                        Padding="0"
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center"
+-                                       BackgroundColor="{Binding Color, Converter={StaticResource StringToColor}}"
+-                                       BorderColor="{Binding Color, Converter={StaticResource StringToColor}}">
++                                       BackgroundColor="{Binding HexColor, Converter={StaticResource StringToColor}}"
++                                       BorderColor="{Binding HexColor, Converter={StaticResource StringToColor}}">
+                                     <Image Source="icon_list.svg"
+                                            WidthRequest="18"
+                                            HeightRequest="18"/>
+@@ -267,9 +267,7 @@
+                                        TextColor="Black"
+                                        FontSize="17"
+                                        HorizontalOptions="Start"
+-                                       VerticalOptions="Center"
+-                                       Margin="0,0,15,0"
+-                                       LineBreakMode="TailTruncation"/>
++                                       VerticalOptions="Center"/>
+                                 <Label Grid.Column="3"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Center"
+diff --git a/Reminders/View/NewListPage.xaml b/Reminders/View/NewListPage.xaml
+deleted file mode 100644
+index 4982a1a..0000000
+--- a/Reminders/View/NewListPage.xaml
++++ /dev/null
+@@ -1,150 +0,0 @@
+-<?xml version="1.0" encoding="utf-8" ?>
+-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+-             xmlns:model="clr-namespace:Reminders.Model"
+-             xmlns:viewmodel="clr-namespace:Reminders.ViewModel"
+-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+-             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+-             x:Class="Reminders.View.NewListPage"
+-             x:DataType="viewmodel:NewListViewModel"
+-             ios:Page.UseSafeArea="True"
+-             Title="Add List"
+-             BackgroundColor="#F2F2F6">
+-
+-    <ContentPage.ToolbarItems>
+-        <ToolbarItem Text="Add item"
+-                     IconImageSource="icon_plus.svg"
+-                     Command="{Binding AddNewListCommand}"/>
+-    </ContentPage.ToolbarItems>
+-
+-    <ContentPage.Resources>
+-        <ResourceDictionary>
+-
+-            <ControlTemplate x:Key="ColorRadio">
+-                <Border Stroke="Transparent"
+-                        WidthRequest="54"
+-                        HeightRequest="54"
+-                        StrokeThickness="2"
+-                        StrokeShape="RoundRectangle 54,54,54,54"
+-                        BackgroundColor="White">
+-
+-                    <Ellipse WidthRequest="40"
+-                             HeightRequest="40"
+-                             Fill="{Binding Source={RelativeSource TemplatedParent}, Path=BackgroundColor}"
+-                             VerticalOptions="Center"
+-                             HorizontalOptions="Center"/>
+-                    <VisualStateManager.VisualStateGroups>
+-                        <VisualStateGroupList>
+-                            <VisualStateGroup x:Name="CheckedStates">
+-                                <VisualState x:Name="Checked">
+-                                    <VisualState.Setters>
+-                                        <Setter Property="Stroke" Value="{StaticResource Gray50}" />
+-
+-                                    </VisualState.Setters>
+-                                </VisualState>
+-                                <VisualState x:Name="Unchecked">
+-                                    <VisualState.Setters>
+-                                        <Setter Property="Stroke" Value="Transparent" />
+-
+-                                    </VisualState.Setters>
+-                                </VisualState>
+-                            </VisualStateGroup>
+-                        </VisualStateGroupList>
+-                    </VisualStateManager.VisualStateGroups>
+-                </Border>
+-            </ControlTemplate>
+-        </ResourceDictionary>
+-    </ContentPage.Resources>
+-
+-    <VerticalStackLayout Margin="16,16,16,16"
+-                         Spacing="15">
+-        <Frame Padding="16,16,16,0"
+-               HeightRequest="200"
+-               CornerRadius="12"
+-               BackgroundColor="White"
+-               BorderColor="White">
+-            <VerticalStackLayout>
+-                <Border VerticalOptions="Start"
+-                        HorizontalOptions="Center"
+-                        HeightRequest="96"
+-                        WidthRequest="96"
+-                        StrokeShape="Ellipse 50"
+-                        Stroke="Transparent">
+-                    <Border.Shadow>
+-                        <Shadow Radius="20"
+-                                Brush="{Binding Color}"
+-                                Opacity="0.4"
+-                                Offset="0,0"/>
+-                    </Border.Shadow>
+-                    <Frame VerticalOptions="Start"
+-                           HorizontalOptions="Center"
+-                           HeightRequest="96"
+-                           WidthRequest="96"
+-                           BackgroundColor="{Binding Color}"
+-                           BorderColor="{Binding Color}"
+-                           CornerRadius="50"
+-                           HasShadow="True">
+-                        <Image Source="icon_list.svg"
+-                               WidthRequest="56"
+-                               HeightRequest="56"
+-                               VerticalOptions="Center"
+-                               HorizontalOptions="Center"/>
+-                    </Frame>
+-                </Border>
+-                <Frame VerticalOptions="End"
+-                       CornerRadius="12"
+-                       BackgroundColor="{StaticResource Gray30}"
+-                       BorderColor="{StaticResource Gray30}"
+-                       HeightRequest="56"
+-                       Padding="0"
+-                       Margin="0,16,0,0">
+-                    <VerticalStackLayout Padding="0"
+-                                         Margin="12,0,12,0">
+-                        <Entry HorizontalOptions="Center"
+-                           VerticalOptions="Center"
+-                           Margin="0"
+-                           HeightRequest="56"
+-                           BackgroundColor="Transparent"
+-                           ClearButtonVisibility="Never"
+-                           Placeholder="List Name"
+-                           FontSize="22"
+-                           PlaceholderColor="{StaticResource Gray60}"
+-                           HorizontalTextAlignment="Center"
+-                           VerticalTextAlignment="Center"
+-                           Keyboard="Text"
+-                           Text="{Binding Name, Mode=TwoWay}"
+-                           TextColor="Black"/>
+-                    </VerticalStackLayout>
+-                </Frame>
+-
+-            </VerticalStackLayout>
+-        </Frame>
+-        <Frame Padding="10,10,10,10"
+-               CornerRadius="12"
+-               BackgroundColor="White"
+-               BorderColor="White">
+-            <CollectionView VerticalOptions="Start"
+-                            HorizontalOptions="Fill"
+-                            Margin="0"
+-                            RadioButtonGroup.GroupName="colorss"
+-                            ItemsSource="{Binding RadioButtons}">
+-                <CollectionView.ItemsLayout>
+-                    <GridItemsLayout Orientation="Vertical" Span="6"/>
+-                </CollectionView.ItemsLayout>
+-                <CollectionView.ItemTemplate>
+-                    <DataTemplate x:DataType="model:RadioColorButtonModel">
+-                        <RadioButton ControlTemplate="{StaticResource ColorRadio}"
+-                             GroupName="colorss"
+-                             IsChecked="{Binding IsChecked}"
+-                             BackgroundColor="{Binding Color}">
+-                            <RadioButton.GestureRecognizers>
+-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:NewListViewModel}}, Path=UpdateListColorCommand}"
+-                                              CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type RadioButton}}}" />
+-                            </RadioButton.GestureRecognizers>
+-                        </RadioButton>
+-                    </DataTemplate>
+-                </CollectionView.ItemTemplate>
+-            </CollectionView>
+-        </Frame>
+-    </VerticalStackLayout>
+-</ContentPage>
+\ No newline at end of file
+diff --git a/Reminders/View/NewListPage.xaml.cs b/Reminders/View/NewListPage.xaml.cs
+deleted file mode 100644
+index 9dfd3f5..0000000
+--- a/Reminders/View/NewListPage.xaml.cs
++++ /dev/null
+@@ -1,12 +0,0 @@
+-using Reminders.ViewModel;
+-
+-namespace Reminders.View;
+-
+-public partial class NewListPage : ContentPage
+-{
+-	public NewListPage(NewListViewModel vm)
+-	{
+-		InitializeComponent();
+-		BindingContext = vm;
+-	}
+-}
+\ No newline at end of file
+diff --git a/Reminders/ViewModel/MainViewModel.cs b/Reminders/ViewModel/MainViewModel.cs
+index e7bd63f..d4613ce 100644
+--- a/Reminders/ViewModel/MainViewModel.cs
++++ b/Reminders/ViewModel/MainViewModel.cs
+@@ -5,7 +5,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
+ using CommunityToolkit.Mvvm.Input;
+ using Reminders.Model;
+ using Reminders.Services;
+-using Reminders.View;
+ 
+ namespace Reminders.ViewModel;
+ 
+@@ -14,19 +13,19 @@ public partial class MainViewModel : ObservableObject
+     private StorageService storageService;
+ 
+     [ObservableProperty]
+-    public ObservableCollection<ReminderListModel> lists = new();
++    public ObservableCollection<ReminderListModel> lists;
+ 
+     [ObservableProperty]
+     [NotifyPropertyChangedFor(nameof(TodayRemindersCount))]
+-    public ObservableCollection<ReminderModel> todayReminders = new();
++    public ObservableCollection<ReminderModel> todayReminders = null;
+ 
+     [ObservableProperty]
+     [NotifyPropertyChangedFor(nameof(ScheduledRemindersCount))]
+-    public ObservableCollection<ReminderModel> scheduledReminders = new();
++    public ObservableCollection<ReminderModel> scheduledReminders = null;
+ 
+     [ObservableProperty]
+     [NotifyPropertyChangedFor(nameof(AllRemindersCount))]
+-    public ObservableCollection<ReminderModel> allReminders = new();
++    public ObservableCollection<ReminderModel> allReminders = null;
+ 
+     public int AllRemindersCount => AllReminders?.Count ?? 0;
+     public int TodayRemindersCount => TodayReminders?.Count ?? 0;
+@@ -35,34 +34,29 @@ public partial class MainViewModel : ObservableObject
+     public MainViewModel(StorageService storageService)
+     {
+         this.storageService = storageService;
+-        //this.storageService.WipeDatabase();
+         RefreshData();
++/*      this.Collection = this.dataStorageService.DataRetrieve();
++        TodayReminders = new ReminderGroup("Today",  Color.FromArgb("#000000"), 0);
++        ScheduledReminders = new ReminderGroup("Scheduled",  Color.FromArgb("#000000"), 0);
++        AllReminders = new ReminderGroup("All",  Color.FromArgb("#000000"), 0);*/
++        /*GetTodayReminders();
++        GetScheduledReminders();
++        GetAllReminders();*/
+     }
+ 
+     [RelayCommand]
+     public async Task AddDummyData()
+     {
+-        ReminderModel reminder = new("Dummy Reminder Future", "Dummy Reminder Description", 1)
+-        {
+-            ScheduledAt = DateTime.Now.AddDays(-1),
+-            HasDate = true
+-        };
+-
+-        ReminderListModel list = new("Dummy List 2", Colors.Blue, 1);
+-        //await this.storageService.AddList(list);
+-        //await this.storageService.AddList(list);
+-        //await this.storageService.WipeDatabase();
+-        //await this.storageService.AddList(list);
+-        //await this.storageService.AddReminder(reminder);
+-        Debug.WriteLine(await this.storageService.GetListDuplicateCount("Dummy List"));
++        ReminderModel reminder = new("Dummy Reminder Future", "Dummy Reminder Description", 1);
++        reminder.ScheduledAt = DateTime.Now.AddDays(-1);
++        reminder.HasDate = true;
++        await this.storageService.AddReminder(reminder);
+         await RefreshData();
+     }
+ 
+ 
+     public async Task RefreshData()
+     {
+-        //Clear and a foreach loop crashes, "invalid parameter" exception
+-        //This introduces an akward animation when updating the lists but it shouldn't be too noticeable since lists get updated at page transitions
+         this.Lists = new(await this.storageService.GetAllLists());
+         this.AllReminders = new(await this.storageService.GetAllReminders());
+         this.TodayReminders = new(await this.storageService.GetTodayReminders());
+@@ -113,7 +107,7 @@ public partial class MainViewModel : ObservableObject
+     [RelayCommand]
+     async Task GoToNewListAsync()
+     {
+-        await Shell.Current.GoToAsync($"{nameof(NewListPage)}", true);
++        //await Shell.Current.GoToAsync($"{nameof(NewListPage)}", true);
+     }
+ 
+     [RelayCommand]
+diff --git a/Reminders/ViewModel/NewListViewModel.cs b/Reminders/ViewModel/NewListViewModel.cs
+deleted file mode 100644
+index cdfad02..0000000
+--- a/Reminders/ViewModel/NewListViewModel.cs
++++ /dev/null
+@@ -1,77 +0,0 @@
+-﻿using System.Collections.ObjectModel;
+-using System.Diagnostics;
+-using System.Diagnostics.Tracing;
+-using System.Text.RegularExpressions;
+-using CommunityToolkit.Mvvm.ComponentModel;
+-using CommunityToolkit.Mvvm.Input;
+-using Reminders.Model;
+-using Reminders.Services;
+-
+-namespace Reminders.ViewModel;
+-//TODO There's a delay when opening the page
+-//TODO Add a way to change the icon
+-
+-public partial class NewListViewModel : ObservableObject
+-{
+-    [ObservableProperty]
+-    Color color;
+-    [ObservableProperty]
+-    int iconId;
+-    [ObservableProperty]
+-    string name;
+-
+-    MainViewModel mvm;
+-    StorageService storageService;
+-
+-    public ObservableCollection<Color> ColorOptions { get; } = new()
+-    {
+-        Color.FromArgb("#F14C3C"),
+-        Color.FromArgb("#FFA033"),
+-        Color.FromArgb("#F7CE45"),
+-        Color.FromArgb("#5DC466"),
+-        Color.FromArgb("#0C79FE"),
+-        Color.FromArgb("#B67AD5"),
+-        Color.FromArgb("#998667"),
+-        Color.FromArgb("#FFFF22")
+-    };
+-
+-    public ObservableCollection<RadioColorButtonModel> RadioButtons { get; set; } = new();
+-
+-    public NewListViewModel(MainViewModel mvm, StorageService storageService)
+-    {
+-        this.mvm = mvm;
+-        this.storageService = storageService;
+-        IconId = 0;
+-        Color = ColorOptions.FirstOrDefault();
+-        Name = String.Empty;
+-
+-        foreach (Color color in ColorOptions)
+-        {
+-            RadioButtons.Add(new RadioColorButtonModel() { Color = color, IsChecked = false});
+-        }
+-        RadioButtons.FirstOrDefault().IsChecked = true;
+-
+-    }
+-
+-    [RelayCommand]
+-    public void UpdateListColor(RadioButton radioButton)
+-    {
+-        this.Color = radioButton.BackgroundColor;
+-    }
+-
+-    [RelayCommand]
+-    public async Task AddNewList()
+-    {
+-        if (Name == String.Empty)
+-        {
+-            int count = 1 + await this.storageService.GetListOrderedDuplicateCount("New List");
+-            Name = $"New List {count}";
+-        }
+-
+-        ReminderListModel list = new(Name, Color, IconId);
+-        await this.storageService.AddList(list);
+-        await mvm.RefreshData();
+-        await Shell.Current.GoToAsync("../", true);
+-    }
+-
+-}
+\ No newline at end of file
+diff --git a/dif.txt b/dif.txt
+deleted file mode 100644
+index e483b19..0000000
+--- a/dif.txt
++++ /dev/null
+@@ -1,175 +0,0 @@
+-commit 8b9d2841b4f83c5cbbbface101a10f43d189fa47
+-Author: truta193 <trutaandrei7033@gmail.com>
+-Date:   Sat Oct 7 15:41:41 2023 +0300
+-
+-    Implemented month/year selector visibility, widget is still ugly
+-
+-diff --git a/Reminders/View/NewReminderDetailsPage.xaml b/Reminders/View/NewReminderDetailsPage.xaml
+-index 84535c9..786877d 100644
+---- a/Reminders/View/NewReminderDetailsPage.xaml
+-+++ b/Reminders/View/NewReminderDetailsPage.xaml
+-@@ -96,50 +96,7 @@
+-                            Grid.ColumnSpan="3"
+-                            Margin="0,0,12,0"/>
+-                 </Grid>
+--                <HorizontalStackLayout>
+--                    <!--Picker for month-->
+--
+--                    <Picker x:Name="MonthPicker"
+--                                Title="Month"
+--                                ItemsSource="{Binding Months}"
+--                                SelectedItem="{Binding selectedMonthString}"
+--                                ItemDisplayBinding="{Binding .}"
+--                                HorizontalOptions="Fill"
+--                                VerticalOptions="Center"
+--                                Margin="0"
+--                                FontSize="17"
+--                                TextColor="Black"
+--                                BackgroundColor="Transparent"
+--                                TitleColor="Black"
+--                                FontAttributes="Bold">
+--                        <Picker.Behaviors>
+--                            <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
+--                                                            Command="{Binding UpdateCalendarMonthFromPickerCommand}"
+--                                                            CommandParameter="{Binding Source={x:Reference MonthPicker}, Path=SelectedItem}"/>
+--                        </Picker.Behaviors>
+--                    </Picker>
+--                    <!--Picker for year-->
+--                    <Picker x:Name="YearPicker"
+--                                Title="Year"
+--                                ItemsSource="{Binding Years}"
+--                                SelectedItem="{Binding SelectedYear}"
+--                                ItemDisplayBinding="{Binding .}"
+--                                HorizontalOptions="Fill"
+--                                VerticalOptions="Center"
+--                                Margin="0"
+--                                FontSize="17"
+--                                TextColor="Black"
+--                                BackgroundColor="Transparent"
+--                                TitleColor="Black"
+--                                FontAttributes="Bold">
+--                        <Picker.Behaviors>
+--                            <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
+--                                                            Command="{Binding UpdateCalendarYearFromPickerCommand}"
+--                                                            CommandParameter="{Binding Source={x:Reference YearPicker}, Path=SelectedItem}"/>
+--                        </Picker.Behaviors>
+--                    </Picker>
+--
+--                </HorizontalStackLayout>
+-+                
+-                 <!--Calendar-->
+-                 <Frame Margin="12,0,12,0"
+-                        Padding="0"
+-@@ -172,14 +129,18 @@
+-                                 <VerticalStackLayout VerticalOptions="Center"
+-                                              HorizontalOptions="Center">
+-                                     <Image Source="icon_arrow_right.svg"
+--                                       HeightRequest="20"
+--                                       VerticalOptions="Center"
+--                                       HorizontalOptions="Start">
+-+                                           HeightRequest="20"
+-+                                           VerticalOptions="Center"
+-+                                           HorizontalOptions="Start"
+-+                                           Rotation="{Binding myRotation}">
+-                                         <Image.Behaviors>
+-                                             <toolkit:IconTintColorBehavior TintColor="{StaticResource Blue90}"/>
+-                                         </Image.Behaviors>
+-                                     </Image>
+-                                 </VerticalStackLayout>
+-+                                <Frame.GestureRecognizers>
+-+                                    <TapGestureRecognizer Command="{Binding UpdateMYSelectorVisibilityCommand}"/>
+-+                                </Frame.GestureRecognizers>
+-                             </Frame>
+-                             <Frame Padding="0"
+-                                    Margin="0"
+-@@ -230,6 +191,52 @@
+-                             </Frame>
+-                         </Grid>
+- 
+-+                        <HorizontalStackLayout IsVisible="{Binding IsMYSelectorVisible}"
+-+                                               Margin="12,0,12,0">
+-+                            <!--Picker for month-->
+-+
+-+                            <Picker x:Name="MonthPicker"
+-+                                Title="Month"
+-+                                ItemsSource="{Binding Months}"
+-+                                SelectedItem="{Binding selectedMonthString}"
+-+                                ItemDisplayBinding="{Binding .}"
+-+                                HorizontalOptions="Fill"
+-+                                VerticalOptions="Center"
+-+                                Margin="0"
+-+                                FontSize="17"
+-+                                TextColor="Black"
+-+                                BackgroundColor="Transparent"
+-+                                TitleColor="Black"
+-+                                FontAttributes="Bold">
+-+                                <Picker.Behaviors>
+-+                                    <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
+-+                                                            Command="{Binding UpdateCalendarMonthFromPickerCommand}"
+-+                                                            CommandParameter="{Binding Source={x:Reference MonthPicker}, Path=SelectedItem}"/>
+-+                                </Picker.Behaviors>
+-+                            </Picker>
+-+                            <!--Picker for year-->
+-+                            <Picker x:Name="YearPicker"
+-+                                Title="Year"
+-+                                ItemsSource="{Binding Years}"
+-+                                SelectedItem="{Binding SelectedYear}"
+-+                                ItemDisplayBinding="{Binding .}"
+-+                                HorizontalOptions="Fill"
+-+                                VerticalOptions="Center"
+-+                                Margin="0"
+-+                                FontSize="17"
+-+                                TextColor="Black"
+-+                                BackgroundColor="Transparent"
+-+                                TitleColor="Black"
+-+                                FontAttributes="Bold">
+-+                                <Picker.Behaviors>
+-+                                    <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
+-+                                                            Command="{Binding UpdateCalendarYearFromPickerCommand}"
+-+                                                            CommandParameter="{Binding Source={x:Reference YearPicker}, Path=SelectedItem}"/>
+-+                                </Picker.Behaviors>
+-+                            </Picker>
+-+
+-+                        </HorizontalStackLayout>
+-+
+-                         <!--Day names-->
+-                         <CollectionView Margin="0,12,0,12"
+-                                         VerticalOptions="Start"
+-diff --git a/Reminders/ViewModel/NewReminderDetalisViewModel.cs b/Reminders/ViewModel/NewReminderDetalisViewModel.cs
+-index f173943..d23f078 100644
+---- a/Reminders/ViewModel/NewReminderDetalisViewModel.cs
+-+++ b/Reminders/ViewModel/NewReminderDetalisViewModel.cs
+-@@ -68,6 +68,14 @@ public partial class NewReminderDetalisViewModel : ObservableObject
+-     [ObservableProperty]
+-     ObservableCollection<string> minutes = new();
+- 
+-+    [ObservableProperty]
+-+    [NotifyPropertyChangedFor(nameof(myRotation))]
+-+    bool isMYSelectorVisible = false;
+-+
+-+    
+-+    public int myRotation => IsMYSelectorVisible ? 90 : 0;
+-+
+-+
+-     [ObservableProperty]
+-     [NotifyPropertyChangedFor(nameof(ScheduledDate))]
+-     bool dateToggle = false;
+-@@ -150,6 +158,7 @@ public partial class NewReminderDetalisViewModel : ObservableObject
+- 
+-     public void GenerateCalendarView(int year, int month)
+-     {
+-+
+-         if (Days != null)
+-         {
+-             Days.Clear();
+-@@ -234,4 +243,10 @@ public partial class NewReminderDetalisViewModel : ObservableObject
+-         SelectedYear = year;
+-     }
+- 
+-+    [RelayCommand]
+-+    public void UpdateMYSelectorVisibility()
+-+    {
+-+        IsMYSelectorVisible = !IsMYSelectorVisible;
+-+    }
+-+
+- }

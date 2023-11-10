@@ -18,11 +18,7 @@ public static class MauiProgram
 	public static MauiApp CreateMauiApp()
 	{
 
-        //Reminder rem = new Reminder("Hello", "World");
-        //DataStorage ds = new DataStorage();
-        //ds.DataXmlSerialize(rem);
-
-        //Remove Entry underline
+        //Remove Entry underline and Editor underline
 #if ANDROID
 		Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoUnderline", (h, v) => {
 
@@ -61,20 +57,20 @@ public static class MauiProgram
         builder.Services.AddSingleton<MainViewModel>();
 		//builder.Services.AddTransient<GroupListViewModel>();
         builder.Services.AddTransient<NewListViewModel>();
-		/*builder.Services.AddSingleton<NewReminderViewModel>();
+		builder.Services.AddSingleton<NewReminderViewModel>();
 		builder.Services.AddTransient<NewReminderListSelectViewModel>();
-		builder.Services.AddSingleton<NewReminderDetalisViewModel>();*/
+		/*builder.Services.AddSingleton<NewReminderDetalisViewModel>();*/
 
 
-        builder.Services.AddSingleton<MainPage>();
+		builder.Services.AddSingleton<MainPage>();
 		//builder.Services.AddTransient<GroupListPage>();
         builder.Services.AddTransient<NewListPage>();
-		/*builder.Services.AddTransient<NewReminderPage>();
+		builder.Services.AddTransient<NewReminderPage>();
 		builder.Services.AddTransient<NewReminderListSelectPage>();
-        builder.Services.AddSingleton<NewReminderDetailsPage>();*/
+		/*builder.Services.AddSingleton<NewReminderDetailsPage>();*/
 
 
 
-        return builder.Build();
+		return builder.Build();
 	}
 }

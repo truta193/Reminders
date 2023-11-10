@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Reminders.View.NewReminderPage"
+             xmlns:model="clr-namespace:Reminders.Model"
+             xmlns:viewmodel="clr-namespace:Reminders.ViewModel"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+             xmlns:service="clr-namespace:Reminders.Services"
+             ios:Page.UseSafeArea="True"
+             x:DataType="viewmodel:NewReminderViewModel"
+             Title="New Reminder"
+             BackgroundColor="#F2F2F6">
+
+    <ContentPage.Resources>
+        <service:StringToColorConverterService x:Key="StringToColor" />
+    </ContentPage.Resources>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Add item"
+                     IconImageSource="icon_plus.svg"
+                     Command="{Binding AddNewReminderCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <VerticalStackLayout Margin="16"
+                         Padding="0"
+                         Spacing="15">
+        <Frame CornerRadius="12"
+               BorderColor="White"
+               BackgroundColor="White"
+               Padding="0"
+               Margin="0">
+            <VerticalStackLayout Margin="0"
+                                 Padding="12,0,12,0"
+                                 VerticalOptions="Start"
+                                 HorizontalOptions="Center">
+                <Grid HorizontalOptions="Fill"
+                      ColumnDefinitions="*"
+                      RowDefinitions="Auto">
+                    <Entry Placeholder="Title"
+                       Text="{Binding NewReminder.Title, Mode=TwoWay}"
+                       PlaceholderColor="{StaticResource Gray50}"
+                       BackgroundColor="Transparent"
+                       ClearButtonVisibility="WhileEditing"
+                       Keyboard="Text"
+                       HorizontalOptions="Fill"
+                       FontSize="17"
+                       Margin="0,12,0,12"
+                       TextColor="Black"/>
+                </Grid>
+
+                <Rectangle BackgroundColor="{StaticResource Gray50}"
+                           HeightRequest="1"
+                           Margin="0"/>
+                <Frame BackgroundColor="Transparent"
+                       Margin="0"
+                       Padding="0"
+                       BorderColor="Transparent"
+                       MinimumHeightRequest="100"
+                       MaximumHeightRequest="300">
+                    <Editor Placeholder="Notes"
+                            Text="{Binding NewReminder.Description, Mode=TwoWay}"
+                            HorizontalOptions="Fill"
+                            VerticalTextAlignment="Start"
+                            PlaceholderColor="{StaticResource Gray50}"
+                            BackgroundColor="Transparent"
+                            Keyboard="Text"
+                            FontSize="17"
+                            Margin="0,12,0,12"
+                            TextColor="Black"
+                            AutoSize="TextChanges"/>
+                </Frame>
+
+            </VerticalStackLayout>
+
+        </Frame>
+        <!--Details Button-->
+        <Frame CornerRadius="12"
+               BorderColor="White"
+               BackgroundColor="White"
+               Padding="0"
+               Margin="0"
+               HeightRequest="54">
+            <Frame.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding GoToDetailsCommand}"/>
+            </Frame.GestureRecognizers>
+            <Grid ColumnDefinitions="Auto, *, Auto"
+                  RowDefinitions="*"
+                  VerticalOptions="Center"
+                  HorizontalOptions="Fill"
+                  HeightRequest="54">
+                <Label Text="Details"
+                       Grid.Row="0"
+                       Grid.Column="0"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start"
+                       TextColor="Black"
+                       FontSize="17"
+                       Margin="12,0,0,0"/>
+                <Image Source="icon_arrow_right.svg"
+                       Grid.Row="0"
+                       Grid.Column="2"
+                       VerticalOptions="Center"
+                       HorizontalOptions="End"
+                       Margin="0,0,12,0"
+                       HeightRequest="24"
+                       WidthRequest="18"/>
+            </Grid>
+        </Frame>
+        <!--List select button-->
+        <Frame CornerRadius="12"
+               BorderColor="White"
+               BackgroundColor="White"
+               Padding="0"
+               Margin="0"
+               HeightRequest="54">
+            <Frame.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding GoToListSelectCommand}"/>
+            </Frame.GestureRecognizers>
+            <Grid ColumnDefinitions="Auto, *, Auto, Auto, Auto"
+                  RowDefinitions="*"
+                  VerticalOptions="Center"
+                  HorizontalOptions="Fill"
+                  HeightRequest="54">
+                <!--Text from selected list color-->
+                <Label Text="List"
+                       Grid.Row="0"
+                       Grid.Column="0"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start"
+                       TextColor="Black"
+                       FontSize="17"
+                       Margin="12,0,0,0"/>
+                <Ellipse Margin="0,0,6,0"
+                         Grid.Row="0"
+                         Grid.Column="2"
+                         WidthRequest="8"
+                         HeightRequest="8"
+                         VerticalOptions="Center"
+                         HorizontalOptions="Start"
+                         Fill="{Binding DisplayedList.Color, Converter={StaticResource StringToColor}}"
+                         BackgroundColor="Transparent">
+
+                </Ellipse>
+                <Label Text="{Binding DisplayedList.Title}"
+                       Margin="0,0,6,0"
+                       Grid.Row="0"
+                       Grid.Column="3"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start"
+                       FontSize="17"
+                       TextColor="{StaticResource Gray70}"/>
+                <Image Source="icon_arrow_right.svg"
+                       Grid.Row="0"
+                       Grid.Column="4"
+                       VerticalOptions="Center"
+                       HorizontalOptions="End"
+                       Margin="0,0,12,0"
+                       HeightRequest="24"
+                       WidthRequest="18"/>
+            </Grid>
+
+        </Frame>
+    </VerticalStackLayout>
+</ContentPage>
