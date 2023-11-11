@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -68,8 +69,10 @@ public partial class NewReminderViewModel : ObservableObject
         }
 
         NewReminder.ListId = DisplayedList.Id;
+        NewReminder.CreatedAt = DateTime.Now;
         await storageService.AddReminder(NewReminder);
         await this.mvm.RefreshData();
+        Debug.WriteLine($"Reminder added {NewReminder.CreatedAt}, {NewReminder.HasDate}, {NewReminder.HasTime}, {NewReminder.ScheduledAt}");
         await Shell.Current.GoToAsync("..", true);
         
     }
@@ -83,6 +86,6 @@ public partial class NewReminderViewModel : ObservableObject
     [RelayCommand]
     async Task GoToDetailsAsync()
     {
-        //await Shell.Current.GoToAsync($"{nameof(NewReminderDetailsPage)}", true);
+        await Shell.Current.GoToAsync($"{nameof(NewReminderDetailsPage)}", true);
     }
 }

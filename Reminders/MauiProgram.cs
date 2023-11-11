@@ -59,15 +59,15 @@ public static class MauiProgram
         builder.Services.AddTransient<NewListViewModel>();
 		builder.Services.AddSingleton<NewReminderViewModel>();
 		builder.Services.AddTransient<NewReminderListSelectViewModel>();
-		/*builder.Services.AddSingleton<NewReminderDetalisViewModel>();*/
+		builder.Services.AddTransient<NewReminderDetailsViewModel>();
 
 
 		builder.Services.AddSingleton<MainPage>();
-		//builder.Services.AddTransient<GroupListPage>();
+		//builder.Services.AddTransient<GroupListPage>();s
         builder.Services.AddTransient<NewListPage>();
 		builder.Services.AddTransient<NewReminderPage>();
 		builder.Services.AddTransient<NewReminderListSelectPage>();
-		/*builder.Services.AddSingleton<NewReminderDetailsPage>();*/
+		builder.Services.AddTransient<NewReminderDetailsPage>();
 
 
 
